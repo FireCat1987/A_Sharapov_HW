@@ -1,38 +1,84 @@
 import java.io.*;
-import java.net.InetAddress;
+
 import java.net.Socket;
-import java.net.UnknownHostException;
+
 import java.util.Scanner;
 
 public class Client {
+    private BufferedReader in;
+    private PrintWriter out;
+    private Socket socket;
 
-    public static void main(String[] args) throws IOException {
-        int port = 6666;
+
+    public Client() {
+        Scanner scan = new Scanner(System.in);
+
+        System.out.println("IP Adresse (Localhost 127.0.0.1).");
+        System.out.println("Format: xxx.xxx.xxx.xxx");
+
+        String ip = "127.0.0.1";//scan.nextLine();
+
         try {
-            InetAddress ip = InetAddress.getByName("127.0.0.1");
-            String[] myip = InetAddress.getLocalHost().toString().split("/");
-            System.out.println(InetAddress.getLocalHost());
-            Socket s = new Socket(ip, port);
-            InputStream sin = s.getInputStream();
-            OutputStream sout = s.getOutputStream();
-            BufferedWriter bin = new BufferedWriter(new OutputStreamWriter(sout));
-            BufferedReader bout = new BufferedReader(new InputStreamReader(sin));
+
+            socket = new Socket(ip, 6666);
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            out = new PrintWriter(socket.getOutputStream(), true);
+
+            System.out.println("Имя в чате");
+            out.println(scan.nextLine());
+            System.out.println(in.readLine());
+
+            Resender resend = new Resender();
+            resend.start();
 
 
-
-
-            while (true) {
-                Scanner sc = new Scanner(System.in);
-                bin.write("[Аркадий " + myip[1] + "]:" + sc.nextLine());
-                bin.newLine();
-                bin.flush();
-                String line = bout.readLine();
-                System.out.println(line);
-
+            String str = "";
+            while (!str.equals("exit")) {
+                str = scan.nextLine();
+                out.println(str);
             }
-        } catch (Exception x) {
-            x.printStackTrace();
+            resend.setStop();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            close();
+        }
+    }
+
+
+    private void close() {
+        try {
+            in.close();
+            out.close();
+            socket.close();
+        } catch (Exception e) {
+            System.err.println("Fehler!");
+        }
+    }
+
+
+    private class Resender extends Thread {
+
+        private boolean stoped;
+
+
+        public void setStop() {
+            stoped = true;
         }
 
+
+        @Override
+        public void run() {
+            try {
+                while (!stoped) {
+                    String str = in.readLine();
+                    System.out.println(str);
+                }
+            } catch (IOException e) {
+                System.err.println("Fehler");
+                e.printStackTrace();
+            }
+        }
     }
+
 }
