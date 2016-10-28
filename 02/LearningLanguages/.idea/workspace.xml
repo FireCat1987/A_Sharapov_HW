@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="9f4b6c14-49f3-4521-a02b-2c301149de93" name="Default" comment="...">
+    <list default="true" id="9f4b6c14-49f3-4521-a02b-2c301149de93" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Main.java" afterPath="$PROJECT_DIR$/src/Main.java" />
     </list>
     <ignored path="LearningLanguages.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -692,7 +691,7 @@
       <updated>1477067835510</updated>
       <workItem from="1477067850230" duration="22316000" />
       <workItem from="1477646610290" duration="4294000" />
-      <workItem from="1477658663042" duration="251000" />
+      <workItem from="1477658663042" duration="269000" />
     </task>
     <task id="LOCAL-00001" summary="...">
       <created>1477658700088</created>
@@ -701,11 +700,18 @@
       <option name="project" value="LOCAL" />
       <updated>1477658700088</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="...">
+      <created>1477658923485</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1477658923485</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="26861000" />
+    <option name="totallyTimeSpent" value="26879000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="22" width="1382" height="754" extended-state="6" />

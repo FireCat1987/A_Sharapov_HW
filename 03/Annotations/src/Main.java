@@ -1,33 +1,56 @@
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
+import java.util.Scanner;
 
 import static java.lang.Thread.sleep;
 
 public class Main {
+    private static Scanner mScanner = new Scanner(System.in);
 
-    public static void main(String[] args) throws ClassNotFoundException, InvocationTargetException, IllegalAccessException, InterruptedException {
-        Class cl = Class.forName("TargetClass");
-        Method[] method = cl.getDeclaredMethods();
-        Object action = null;
-        for(Method md: method){
+    public static void main(String[] args) {
+        Class mClass;
+        String mReadLine;
+        while (true) {
+            System.out.println("Введите название класса:");
+            mReadLine = mScanner.nextLine();
+            try {
+                mClass = Class.forName(mReadLine);
+                break;
+            } catch (ClassNotFoundException e) {
+                System.out.println("Класс не найден!");
 
-            if(md.isAnnotationPresent(SimpleAnnotation.class)) {
-                System.out.println("Запускаем методы которые имеют аннотацию SimpleAnnotation");
-                md.invoke(cl.getClass());
             }
         }
-        for(Method md: method){
-
-            if(md.isAnnotationPresent(DelayAnnotation.class)) {
-                System.out.println("Запускаем методы которые имеют аннотацию DelayAnnotation с задержкой");
-                int i = md.getAnnotation(DelayAnnotation.class).delay();
-                System.out.println("Задержка составит " + i + " секунд");
-                sleep(i * 1000);
-                md.invoke(cl.getClass());
+        while (true) {
+            System.out.println("Введите название аннотации или наберите exit для выхода:");
+            Method[] mMethods = mClass.getDeclaredMethods();
+            mReadLine = mScanner.nextLine();
+            if (mReadLine.equals("exit")) break;
+            for (Method mMethod : mMethods) {
+                Annotation[] mAnnotations = mMethod.getAnnotations();
+                for (Annotation mAnnotation : mAnnotations) {
+                    if (mReadLine.equals(mAnnotation.annotationType().getName())) {
+                        Method[] mParametrs = mAnnotation.getClass().getDeclaredMethods();
+                        Object mObjectParametr = null;
+                        try {
+                            for (Method mParametr : mParametrs) {
+                                if (mParametr.getName().equals("delay"))
+                                    mObjectParametr = mParametr.invoke(mAnnotation);
+                            }
+                            if (mObjectParametr != null) {
+                                System.out.println("Задержка составит " + mObjectParametr + " секунд");
+                                sleep((int) mObjectParametr * 1000);
+                                mMethod.invoke(mClass.getClass());
+                            } else {
+                                mMethod.invoke(mClass.getClass());
+                            }
+                        } catch (IllegalAccessException | InterruptedException | InvocationTargetException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
             }
         }
-
     }
 }
