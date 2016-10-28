@@ -1,18 +1,19 @@
+import org.jetbrains.annotations.NotNull;
 import java.io.*;
 import java.util.*;
 import java.util.function.UnaryOperator;
 
 public class Main {
-    private static final String PATH_TO_PROPERTIES = "src/langfile/";
+    private static final String PATH_TO_lANGUAGE = "src/langfile/";
+    private static final String PATH_TO_PROPERTIES = "src/";
 
+    private static String[] sStat = {"0", "0"};
+    private static File sFile;
+    private static String sId;
 
-    private static String[] Stat = {"0","0"};
-    private static File file;
-    private static String id;
-
-    private static Properties prop = new Properties();
-    private static Scanner in = new Scanner(System.in);
-    private static Random random = new Random();
+    private static Properties sProp = new Properties();
+    private static Scanner sIn = new Scanner(System.in);
+    private static Random sRandom = new Random();
 
     public static void main(String[] args) {
         inValue("Хотите продолжить с предидущими результатами? (да/нет): ", Main::getId);
@@ -23,28 +24,27 @@ public class Main {
         int k = new Integer(s);
         if (k == 1) {
             loadFile("stat");
-            id = inValue("Введите свой номер: ", null);
-            int i = 0;
-            while (i == 0) {
-                if (!getRuProp(String.valueOf(id)).equals("")) {
-                    Stat = getRuProp(String.valueOf(id)).split(";");
-                    System.out.println("Ваши предидущие результаты: правильных ответов - " + Stat[0] + ", неправильных - " + Stat[1]);
-                    i = 1;
+            sId = inValue("Введите свой номер: ", null);
+            while (true) {
+                if (!getRuProp(String.valueOf(sId)).equals("")) {
+                    sStat = getRuProp(String.valueOf(sId)).split(";");
+                    System.out.println("Ваши предидущие результаты: правильных ответов - " + sStat[0] + ", неправильных - " + sStat[1]);
+                    break;
                 } else {
-                    id = inValue("Такой номер не найден, попробуйте ещё или введите 0 для создания нового номера: ", null);
+                    sId = inValue("Такой номер не найден, попробуйте ещё или введите 0 для создания нового номера: ", null);
                 }
             }
         } else {
-            id = String.valueOf(random.nextInt(100));
-            System.out.println("Ваш id = " + id);
+            sId = String.valueOf(sRandom.nextInt(100));
+            System.out.println("Ваш id = " + sId);
 
         }
-        return id;
+        return sId;
     }
 
     private static String getRuProp(String s) {
         try {
-            return new String(prop.getProperty(s).getBytes("ISO8859-1"));
+            return new String(sProp.getProperty(s).getBytes("ISO8859-1"));
         } catch (IOException e) {
             e.getMessage();
             System.err.println("ОШИБКА: неудалось получить свойство " + s + "!");
@@ -54,33 +54,33 @@ public class Main {
         return "";
     }
 
-    private static String inValue(String text , UnaryOperator<String> callback) {
+    private static String inValue(String text, UnaryOperator<String> callback) {
         System.out.println(text);
-        String a = in.next();
+        String a = sIn.next();
         switch (a.toLowerCase()) {
             case "да":
-                if(callback != null) {
+                if (callback != null) {
                     callback.apply("1");
                     break;
                 } else {
                     return a;
                 }
             case "нет":
-                if(callback != null) {
+                if (callback != null) {
                     callback.apply("0");
                     break;
                 } else {
                     return a;
                 }
             case "exit":
-                statexit();
+                exit();
                 break;
             case "выход":
-                statexit();
+                exit();
                 break;
             default:
-                if(callback != null) {
-                    inValue(text,callback);
+                if (callback != null) {
+                    inValue(text, callback);
                     break;
                 } else {
                     return a;
@@ -88,21 +88,25 @@ public class Main {
         }
         return "0";
     }
-    private static String savestat(String s){
-        if (!id.isEmpty() && s.equalsIgnoreCase("1")) {
+
+    @NotNull
+    private static String saveStat(String s) {
+        if (!sId.isEmpty() && s.equalsIgnoreCase("1")) {
+
             loadFile("stat");
-            prop.setProperty(id, Stat[0] + ";" + Stat[1]);
+            sProp.clear();
+            sProp.setProperty(sId, sStat[0] + ";" + sStat[1]);
             saveFile("stat");
             return "Результаты сохранены.";
         } else {
             return "Нет id для сохранения результата.";
         }
-
     }
-    private static void statexit() {
-        if (!Stat[0].equalsIgnoreCase("0") || !Stat[1].equalsIgnoreCase("0")) {
-            System.out.println("Ваши результаты: правильных ответов - " + Stat[0] + ", неправильных - " + Stat[1]);
-            inValue("Сохранить результат? (да/нет): ", Main::savestat);
+
+    private static void exit() {
+        if (!sStat[0].equalsIgnoreCase("0") || !sStat[1].equalsIgnoreCase("0")) {
+            System.out.println("Ваши результаты: правильных ответов - " + sStat[0] + ", неправильных - " + sStat[1]);
+            inValue("Сохранить результат? (да/нет): ", Main::saveStat);
         }
         System.out.println("пока!");
         System.exit(0);
@@ -111,20 +115,18 @@ public class Main {
     private static void loadLangFile(String str) {
         try {
             String s = inValue(str, null);
-            int i = 0;
-            while (i == 0) {
-                file = new File(PATH_TO_PROPERTIES + s + ".properties");
-                if (file.exists() && file.isFile()) {
-                    FileInputStream fis = new FileInputStream(file);
-                    prop.clear();
-                    prop.load(fis);
-                    i = 1;
+            while (true) {
+                sFile = new File(PATH_TO_lANGUAGE + s + ".properties");
+                if (sFile.exists() && sFile.isFile()) {
+                    FileInputStream fis = new FileInputStream(sFile);
+                    sProp.clear();
+                    sProp.load(fis);
                     break;
                 } else {
                     s = inValue("Данный языковой файл не найден, попробуйте ещё раз: ", null);
                 }
             }
-            if(!prop.isEmpty()) {
+            if (!sProp.isEmpty()) {
                 System.out.println("Поехали...");
                 getQuestion();
             } else {
@@ -140,14 +142,16 @@ public class Main {
     }
 
     private static void getQuestion() {
-        for (Object o : prop.keySet()) {
+        List<Object> listOfKeys = new ArrayList<>(sProp.keySet());
+        Collections.shuffle(listOfKeys);
+        for (Object o : listOfKeys) {
             String sin = inValue(o.toString() + " = ?", null);
             if (sin.equalsIgnoreCase(getRuProp(o.toString()))) {
-                Stat[0] = String.valueOf(new Integer(Stat[0]) + 1);
-                System.out.println("Ответ верный (" +getRuProp(o.toString())+ ")");
+                sStat[0] = String.valueOf(new Integer(sStat[0]) + 1);
+                System.out.println("Ответ верный (" + getRuProp(o.toString()) + ")");
             } else {
-                Stat[1] = String.valueOf(new Integer(Stat[1]) + 1);
-                System.out.println("Ответ неверный (" +getRuProp(o.toString())+ ")");
+                sStat[1] = String.valueOf(new Integer(sStat[1]) + 1);
+                System.out.println("Ответ неверный (" + getRuProp(o.toString()) + ")");
             }
         }
         System.out.println("Больше заданий к сожалению нет");
@@ -155,17 +159,14 @@ public class Main {
     }
 
     private static void loadFile(String s) {
-        file = new File(PATH_TO_PROPERTIES + s + ".properties");
-
+        sFile = new File(PATH_TO_PROPERTIES + s + ".properties");
         try {
 
-            if (file.exists() && file.isFile()) {
-                FileInputStream fis = new FileInputStream(file);
-                prop.clear();
-                prop.load(fis);
+            if (sFile.exists() && sFile.isFile()) {
+                FileInputStream fis = new FileInputStream(sFile);
+                sProp.load(fis);
             } else {
-                System.err.println("Данный файл не найден, или его невозможно прочитать!");
-
+                System.err.println("Данный файл не найден, или его невозможно прочитать! Создаю новый файл...");
             }
         } catch (InvalidPropertiesFormatException e) {
             e.printStackTrace();
@@ -175,20 +176,15 @@ public class Main {
     }
 
     private static void saveFile(String s) {
-        file = new File(PATH_TO_PROPERTIES + s + ".properties");
+        sFile = new File(PATH_TO_PROPERTIES + s + ".properties");
         try {
-
-            if (file.exists() && file.isFile()) {
-                FileOutputStream fos = new FileOutputStream(file);
-                prop.store(fos, "");
-            } else {
-                System.err.println("Данный файл не найден, или его невозможно прочитать!!!");
-
-            }
+            FileOutputStream fos = new FileOutputStream(sFile);
+            sProp.store(fos, "");
         } catch (InvalidPropertiesFormatException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.getMessage();
         }
+        System.out.println("Результаты сохранены!");
     }
 }
