@@ -23,7 +23,7 @@ public class Main {
     private static String getId(String s) {
         int k = new Integer(s);
         if (k == 1) {
-            loadFile("stat");
+            loadFile();
             sId = inValue("Введите свой номер: ", null);
             while (true) {
                 if (!getRuProp(String.valueOf(sId)).equals("")) {
@@ -93,7 +93,7 @@ public class Main {
     private static String saveStat(String s) {
         if (!sId.isEmpty() && s.equalsIgnoreCase("1")) {
 
-            loadFile("stat");
+            loadFile();
             sProp.clear();
             sProp.setProperty(sId, sStat[0] + ";" + sStat[1]);
             saveFile("stat");
@@ -158,8 +158,8 @@ public class Main {
         loadLangFile("Введите название языка который желаете изучать: ");
     }
 
-    private static void loadFile(String s) {
-        sFile = new File(PATH_TO_PROPERTIES + s + ".properties");
+    private static void loadFile() {
+        sFile = new File(PATH_TO_PROPERTIES + "stat" + ".properties");
         try {
 
             if (sFile.exists() && sFile.isFile()) {
