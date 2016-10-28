@@ -4,19 +4,27 @@ public class Main {
 
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
-
         System.out.println("Работать как Клиент или Сервер? (S(erver) / C(lient))");
         while (true) {
-            char answer = Character.toLowerCase(in.nextLine().charAt(0));
-            if (answer == 's') {
-                new Server();
-                break;
-            } else if (answer == 'c') {
-                new Client();
-                break;
-            } else {
-                System.out.println("Fehler");
+            String answer = in.nextLine();
+            switch (answer.toLowerCase()){
+                case "s":
+                    new Server();
+                    break;
+                case "c":
+                    new Client();
+                    break;
+                case "exit":
+                    System.exit(0);
+                default:
+                    System.out.println("Неверный ввод, попробуйте ещё раз!");
+                    break;
             }
         }
+    }
+    public void quit() {
+        //run = false;
+        //broadcasts.quit();
+        System.exit(0);
     }
 }
