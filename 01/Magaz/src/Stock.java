@@ -1,84 +1,85 @@
 import java.util.Arrays;
 
-public class Stock {
-    private Product[] allStock;
+class Stock {
+    private Product[] mAllStock;
 
-    public Stock() {
-        this.allStock = new Product[0];
+    Stock() {
+        this.mAllStock = new Product[0];
     }
 
-    private void resizeStock(int plusSize) {
-        int newSize = plusSize + allStock.length;
-        allStock = Arrays.copyOf(allStock, newSize);
+    private void resizeStock(int mPlusSize) {
+        int mNewSize = mPlusSize + mAllStock.length;
+        mAllStock = Arrays.copyOf(mAllStock, mNewSize);
     }
 
-    public void addToStock(Product product) {
+    void addToStock(Product mProduct) {
         resizeStock(1);
-        allStock[allStock.length-1] = product;
-        System.out.println("Добавлен 1 товар!");
+        mAllStock[mAllStock.length - 1] = mProduct;
+        //System.out.println("[INFO] Добавлен 1 товар!");
     }
-    public void addToStock(Product[] product) {
-        resizeStock(product.length);
-        System.arraycopy(product, 0, allStock, allStock.length-product.length, allStock.length);
-        System.out.println("Добавлено " + product.length + " товаров!");
+
+    void addToStock(Product[] mProduct) {
+        resizeStock(mProduct.length);
+        System.arraycopy(mProduct, 0, mAllStock, mAllStock.length - mProduct.length, mProduct.length);
+        //System.out.println("[INFO] Добавлено " + product.length + " товаров!");
     }
-    public Product[] getAllProduct() {
-        return allStock;
+
+    Product[] getAllProduct() {
+        return mAllStock;
     }
-    public int getColProduct() {
-        return allStock.length;
+
+    int getColProduct() {
+        return mAllStock.length;
     }
-    public static boolean contains(int[] a, int num) {
-        for (int i : a) {
-            if (i == num) {
-                return true;
-            }
-        }
-        return false;
-    }
-    public String getStatToColor() {
-        String[][] colors = new String[allStock.length][2];
+
+    String getStatToColor() {
+        if (mAllStock.length == 0) return "Значения цветов отсутствуют";
+        String[][] mColors = new String[mAllStock.length][2];
 
         int k = 0;
-        for (Product product : allStock) {
-            colors[k][0] = product.getColor();
-            colors[k][1] = String.valueOf(0);
-            for (Product p : allStock) {
-                if(colors[k][0].equals(p.getColor())) {
-                    colors[k][1] = String.valueOf(new Integer(colors[k][1]) + 1);
+        for (Product product : mAllStock) {
+            mColors[k][0] = product.getColor();
+            mColors[k][1] = String.valueOf(0);
+            for (Product p : mAllStock) {
+                if (mColors[k][0].equals(p.getColor())) {
+                    mColors[k][1] = String.valueOf(new Integer(mColors[k][1]) + 1);
                 }
             }
             k++;
         }
 
-        int n = colors.length;
+        int n = mColors.length;
 
-        for ( int i = 0, m = 0; i != n; i++, n = m )
-        {
-            for ( int j = m = i + 1; j != n; j++ )
-            {
-                if ( colors[j][0] != colors[i][0] )
-                {
-                    if ( m != j ) colors[m] = colors[j];
+        for (int i = 0, m; i != n; i++, n = m) {
+            for (int j = m = i + 1; j != n; j++) {
+                if (mColors[j][0].equals(mColors[i][0])) {
+                    if (m != j) mColors[m] = mColors[j];
                     m++;
                 }
             }
         }
-        if ( n != colors.length )
-        {
+        if (n != mColors.length) {
             String[][] b = new String[n][2];
-            for ( int i = 0; i < n; i++ ) b[i] = colors[i];
-            colors = b;
+            System.arraycopy(mColors, 0, b, 0, n);
+            mColors = b;
         }
         String s = "";
-        for ( String[] x : colors ) s += x[0] + " " + x[1] + "шт; ";
+        for (String[] x : mColors) s += x[0] + " " + x[1] + "шт; ";
         return s;
     }
-    public int getAverageWeight() {
-        int aWeight=0;
-        for (Product product : allStock) {
-            aWeight += product.getWeight();
+
+    int getAverageWeight() {
+        if (mAllStock.length == 0) return 0;
+        int mSumWeight = 0;
+        for (Product product : mAllStock) {
+            mSumWeight += product.getWeight();
         }
-        return aWeight/allStock.length;
+        return mSumWeight / mAllStock.length;
+    }
+
+    int delAllProduct() {
+        int mColProduct = getColProduct();
+        this.mAllStock = new Product[0];
+        return mColProduct;
     }
 }

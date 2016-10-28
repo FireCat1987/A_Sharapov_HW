@@ -1,9 +1,9 @@
-public class Tv extends Product {
-    private int diagonal;
+class Tv extends Product {
+    private int mDiagonal;
 
-    public Tv(int price, int weight, String color, int diagonal) {
-        super(price, weight, color);
-        this.diagonal = diagonal;
+    Tv(int mPrice, int mWeight, String mColor, int mDiagonal) {
+        super(mPrice, mWeight, mColor);
+        this.mDiagonal = mDiagonal;
     }
 
     @Override
@@ -12,15 +12,15 @@ public class Tv extends Product {
                 "price=" + getPrice() +
                 ", weight=" + getWeight() +
                 ", color=" + getColor() +
-                ", diagonal=" + diagonal +
+                ", diagonal=" + mDiagonal +
                 '}';
     }
 
     public int getDiagonal() {
-        return diagonal;
+        return mDiagonal;
     }
 
-    public void setDiagonal(int diagonal) {
-        this.diagonal = diagonal;
+    public void setDiagonal(int mDiagonal) {
+        this.mDiagonal = mDiagonal;
     }
 }

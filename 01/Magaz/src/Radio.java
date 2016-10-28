@@ -1,9 +1,9 @@
-public class Radio extends Product {
-    private String range;
+class Radio extends Product {
+    private String mRange;
 
-    public Radio(int price, int weight, String color, String range) {
-        super(price, weight, color);
-        this.range = range;
+    Radio(int mPrice, int mWeight, String mColor, String mRange) {
+        super(mPrice, mWeight, mColor);
+        this.mRange = mRange;
     }
 
     @Override
@@ -12,15 +12,15 @@ public class Radio extends Product {
                 "price=" + getPrice() +
                 ", weight=" + getWeight() +
                 ", color=" + getColor() +
-                ", range='" + range + '\'' +
+                ", range='" + mRange + '\'' +
                 '}';
     }
 
     public String getRange() {
-        return range;
+        return mRange;
     }
 
-    public void setRange(String range) {
-        this.range = range;
+    public void setRange(String mRange) {
+        this.mRange = mRange;
     }
 }

@@ -1,36 +1,36 @@
 abstract class Product {
-    private int price;
-    private int weight;
-    private String color;
+    private int mPrice;
+    private int mWeight;
+    private String mColor;
 
-    public Product(int price, int weight, String color) {
-        this.price = price;
-        this.weight = weight;
-        this.color = color;
+    Product(int mPrice, int mWeight, String mColor) {
+        this.mPrice = mPrice;
+        this.mWeight = mWeight;
+        this.mColor = mColor;
     }
 
-    public int getPrice() {
-        return price;
+    int getPrice() {
+        return mPrice;
     }
 
 
-    public void setPrice(int price) {
-        this.price = price;
+    public void setPrice(int mPrice) {
+        this.mPrice = mPrice;
     }
 
-    public int getWeight() {
-        return weight;
+    int getWeight() {
+        return mWeight;
     }
 
-    public void setWeight(int weight) {
-        this.weight = weight;
+    public void setWeight(int mWeight) {
+        this.mWeight = mWeight;
     }
 
-    public String getColor() {
-        return color;
+    String getColor() {
+        return mColor;
     }
 
-    public void setColor(String color) {
-        this.color = color;
+    public void setColor(String mColor) {
+        this.mColor = mColor;
     }
 }

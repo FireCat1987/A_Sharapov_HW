@@ -1,11 +1,11 @@
-public class Phone extends Product {
-    private int memory;
-    private int diagonal;
+class Phone extends Product {
+    private int mMemory;
+    private int mDiagonal;
 
-    public Phone(int price, int weight, String color, int memory, int diagonal) {
-        super(price, weight, color);
-        this.memory = memory;
-        this.diagonal = diagonal;
+    Phone(int mPrice, int mWeight, String mColor, int mMemory, int mDiagonal) {
+        super(mPrice, mWeight, mColor);
+        this.mMemory = mMemory;
+        this.mDiagonal = mDiagonal;
     }
 
     @Override
@@ -14,24 +14,24 @@ public class Phone extends Product {
                 "price=" + getPrice() +
                 ", weight=" + getWeight() +
                 ", color=" + getColor() +
-                ", memory=" + memory +
-                ", diagonal=" + diagonal +
+                ", memory=" + mMemory +
+                ", diagonal=" + mDiagonal +
                 '}';
     }
 
     public int getMemory() {
-        return memory;
+        return mMemory;
     }
 
-    public void setMemory(int memory) {
-        this.memory = memory;
+    public void setMemory(int mMemory) {
+        this.mMemory = mMemory;
     }
 
     public int getDiagonal() {
-        return diagonal;
+        return mDiagonal;
     }
 
-    public void setDiagonal(int diagonal) {
-        this.diagonal = diagonal;
+    public void setDiagonal(int mDiagonal) {
+        this.mDiagonal = mDiagonal;
     }
 }
