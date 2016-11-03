@@ -1,8 +1,10 @@
-import com.sun.org.apache.xpath.internal.SourceTree;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.*;
 import java.util.*;
+
 
 class Server {
 
@@ -13,8 +15,7 @@ class Server {
 
     Server() {
         Runnable broadcast = () -> {
-            byte data[] = new byte[0];
-            data = String.valueOf(connections.size()).getBytes();
+
             DatagramSocket socket = null;
             try {
                 socket = new DatagramSocket();
@@ -38,9 +39,11 @@ class Server {
                 System.err.println("Произошла ошибка получения адреса сервера!");
                 closeAll();
             }
-            DatagramPacket packet = new DatagramPacket(data, data.length, serverAddress, 9090);
+            byte data[] = new byte[0];
             while (true) {
                 try {
+                    data = String.valueOf(connections.size()).getBytes();
+                    DatagramPacket packet = new DatagramPacket(data, data.length, serverAddress, 9090);
                     assert socket != null;
                     socket.send(packet);
                     Thread.sleep(1000);
@@ -52,7 +55,13 @@ class Server {
         };
         Runnable accepter = () -> {
             try {
-                server = new ServerSocket(6666);
+                if (!portAvailable(6666)) System.out.println("В сети уже присутствует сервер с данным портом!");
+                else System.out.println("Порты свободны!");
+                SocketAddress sa = new InetSocketAddress(6666);
+                ServerSocket server = new ServerSocket();
+                server.setReuseAddress(true);
+                server.bind(sa);
+                //server = new ServerSocket(6666);
                 System.out.println("Сервер успешно запущен! Ожидаем подключения клиентов...");
                 while (true) {
                     Socket socket = server.accept();
@@ -73,24 +82,58 @@ class Server {
 
         new Thread(broadcast).start();
         new Thread(accepter).start();
-
+        Scanner sc = new Scanner(System.in);
+        while (true) {
+            String answer = sc.nextLine();
+            switch (answer.toLowerCase()) {
+                case "//command":
+                    System.out.println("//list - список всех участников, //exit - выход из приложения, //exall - отключить всех пользователей");
+                    break;
+                case "//exall":
+                    closeAll();
+                    break;
+                case "//list":
+                    if (connections.size() > 0) {
+                        synchronized (connections) {
+                            System.out.println("Список участников:");
+                            for (Connection i : connections) {
+                                System.out.println("[" + i.id + "] " + i.name);
+                            }
+                        }
+                    } else {
+                        System.out.println("Список участников пуст");
+                    }
+                    break;
+                case "//exit":
+                    System.out.println("Выход из приложения");
+                    try {
+                        server.close();
+                    } catch (IOException e) {
+                        System.out.println("Ошибка закрытия сервера");
+                    }
+                    System.exit(0);
+                default:
+                    System.out.println("Неизвестная комманда! Для вывода списка всех комманд введите //command.");
+                    break;
+            }
+        }
     }
 
     private void closeAll() {
-        try {
-            if (server != null) {
-                System.out.println("Останавливаем сервер");
-                server.close();
-                System.out.println("Отключаем клиентов");
-                synchronized (connections) {
-                    for (Connection connection : connections) {
-                        (connection).close();
-                    }
-                }
+        System.out.println("Отключаем клиентов");
+        synchronized (connections) {
+            for (Connection i : connections) {
+                (i).close((i).getYourId());
             }
-        } catch (IOException e) {
-            System.err.println("Ошибка ввода/вывода при остановке сервера!");
-            System.exit(0);
+        }
+
+    }
+
+    private boolean portAvailable(int port) {
+        try (Socket ignored = new Socket("localhost", port)) {
+            return false;
+        } catch (IOException ignored) {
+            return true;
         }
     }
 
@@ -110,7 +153,6 @@ class Server {
                 out = new PrintWriter(socket.getOutputStream(), true);
             } catch (IOException e) {
                 System.err.println("Произошла ошибка при подключении.");
-                close();
             }
         }
 
@@ -121,14 +163,23 @@ class Server {
                 id = random.nextInt(100) + 1;
                 out.println("Ваш id:" + id);
                 synchronized (connections) {
-                    for (Connection connection : connections) {
-                        if(connection.getYourId() != id) (connection).out.println("[" + id + "] " + name + " вошёл в чат");
-                    }
+                    connections.stream().filter(i -> i.getYourId() != id).forEach(i -> (i).out.println("[" + id + "] " + name + " вошёл в чат"));
                 }
                 String str;
                 while (true) {
                     str = in.readLine();
-                    if (str.equals("exit")) break;
+                    if (str.equals("//exit")) break;
+                    if (str.equals("//list")) {
+                        synchronized (connections) {
+                            out.println("Список участников:");
+                            for (Connection i : connections) {
+                                if (id != i.getYourId()) {
+                                    out.println("[" + i.id + "] " + i.name);
+                                }
+                            }
+                        }
+                        continue;
+                    }
                     int sid = 0;
                     if (str.indexOf("[") == 0 && str.indexOf("]") > 0) {
                         sid = Integer.parseInt(str.substring(str.indexOf("[") + 1, str.indexOf("]")));
@@ -142,21 +193,17 @@ class Server {
                                     i.out.println("[" + id + "] " + name + ": " + str);
                                 }
                             } else {
-
                                 i.out.println("[" + id + "] " + name + ": " + str);
                             }
                         }
                     }
                 }
-                synchronized (connections) {
-                    for (Connection connection : connections) {
-                        if(connection.getYourId() != id) (connection).out.println("[" + id + "] " + name + " вышел из чата");
 
-                    }
-                }
+                close(id);
+
             } catch (IOException e) {
                 System.err.println("Произошла непредвиденная ошибка. Подключение " + "[" + id + "] " + name + " будет закрыто.");
-                close();
+                close(id);
             }
         }
 
@@ -164,16 +211,21 @@ class Server {
             return id;
         }
 
-        public String getYourName() {
-            return name;
-        }
-
-        void close() {
+        void close(int id) {
+            System.out.println("0");
+            synchronized (connections) {
+                for (Connection connection : connections) {
+                    if (connection.getYourId() != id) {
+                        (connection).out.println("[" + id + "] " + name + " вышел из чата");
+                    }
+                }
+            }
             try {
+                System.out.println("1");
                 in.close();
+                System.out.println("2");
                 out.close();
                 System.out.println("Клиент с ip " + socket.getInetAddress().getHostAddress() + " отключился!");
-
                 socket.close();
                 connections.remove(this);
                 System.out.println("Осталось клиентов " + connections.size());

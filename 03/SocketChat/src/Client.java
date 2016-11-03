@@ -24,28 +24,22 @@ class Client {
             Resender resend = new Resender();
             resend.start();
             String str = "";
-            while (!str.equals("exit")) {
+            while (!str.equals("//exit")) {
                 str = scan.nextLine();
+                if(str.equals("//command")) System.out.println("//list - список всех участников, [id] сообщение  - отправка приватного сообщения");
                 out.println(str);
             }
             resend.setStop();
         } catch (IOException e) {
-            System.err.println("Во время настройки подключения возникла ошибка воода вывода!");
+            System.err.println("Во время настройки подключения возникла ошибка ввода/вывода!");
         } finally {
             close();
         }
     }
 
     private void close() {
-        try {
-            in.close();
-            out.close();
-            client.close();
-            System.exit(0);
-        } catch (IOException e) {
-            System.err.println("При закрытии подключения возникла ошибка воода вывода!");
-            System.exit(0);
-        }
+        out.close();
+        System.exit(0);
     }
 
     private void connect() {
