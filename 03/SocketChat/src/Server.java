@@ -1,91 +1,73 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.*;
 import java.util.*;
 
-
 class Server {
-
-    private final List<Connection> connections =
-            Collections.synchronizedList(new ArrayList<Connection>());
-    private ServerSocket server = null;
-    private InetAddress serverAddress = null;
+    private final List<UserThread> userThreads =
+            Collections.synchronizedList(new ArrayList<UserThread>());
+    private final List<Message> messageHistory =
+            Collections.synchronizedList(new ArrayList<Message>());
+    private DatagramSocket datagramSocket = null;
+    private DatagramPacket datagramPacket = null;
+    private InetAddress inetAddress = null;
+    private ServerSocket serverSocket = null;
 
     Server() {
+        try {
+            SocketAddress serverAddress = new InetSocketAddress(Const.SERVER_PORT);
+            serverSocket = new ServerSocket();
+            serverSocket.setReuseAddress(true);
+            serverSocket.bind(serverAddress);
+            System.out.println("Сервер успешно запущен! Ожидаем подключения клиентов...");
+            datagramSocket = new DatagramSocket();
+            datagramSocket.setBroadcast(true);
+            String hostAddress = InetAddress.getLocalHost().getHostAddress();
+            StringBuilder stringBuilder = new StringBuilder();
+            Scanner scanner = new Scanner(hostAddress);
+            scanner.useDelimiter("\\.");
+            stringBuilder.append(scanner.next()).append(".");
+            stringBuilder.append(scanner.next()).append(".");
+            stringBuilder.append(scanner.next()).append(".");
+            stringBuilder.append(255);
+            inetAddress = InetAddress.getByName(stringBuilder.toString());
+        } catch (IOException e) {
+            System.err.println("Произошла ошибка создания сокета рассылки широковещательных запросов!");
+            e.printStackTrace();
+        }
         Runnable broadcast = () -> {
-
-            DatagramSocket socket = null;
-            try {
-                socket = new DatagramSocket();
-                socket.setBroadcast(true);
-            } catch (SocketException e) {
-                System.err.println("Произошла ошибка создания сокета рассылки широковещательных запросов!");
-                closeAll();
-            }
-            try {
-                String adr = null;
-                adr = InetAddress.getLocalHost().getHostAddress();
-                StringBuilder sb = new StringBuilder();
-                Scanner scaner = new Scanner(adr);
-                scaner.useDelimiter("\\.");
-                sb.append(scaner.next()).append(".");
-                sb.append(scaner.next()).append(".");
-                sb.append(scaner.next()).append(".");
-                sb.append(255);
-                serverAddress = InetAddress.getByName(sb.toString());
-            } catch (UnknownHostException e) {
-                System.err.println("Произошла ошибка получения адреса сервера!");
-                closeAll();
-            }
-            byte data[] = new byte[0];
             while (true) {
                 try {
-                    data = String.valueOf(connections.size()).getBytes();
-                    DatagramPacket packet = new DatagramPacket(data, data.length, serverAddress, 9090);
-                    assert socket != null;
-                    socket.send(packet);
+                    byte data[] = new byte[0];
+                    data = String.valueOf(userThreads.size()).getBytes();
+                    datagramPacket = new DatagramPacket(data, data.length, inetAddress, Const.BROADCAST_PORT);
+                    assert datagramSocket != null;
+                    datagramSocket.send(datagramPacket);
+                    serverSocket.setSoTimeout(1000);
+                    Socket acceptSocket = serverSocket.accept();
+                    UserThread userThread = new UserThread(acceptSocket);
+                    userThreads.add(userThread);
+                    userThread.start();
+                    System.out.println("Клиент с ip " + acceptSocket.getInetAddress().getHostAddress() + " подключился!");
+                    System.out.println("Всего клиентов " + userThreads.size());
                     Thread.sleep(1000);
-                } catch (IOException | InterruptedException e) {
+                } catch (InterruptedException e) {
                     System.err.println("Произошла ошибка ввода/вывода в момент рассылки широковещательных сообщений!");
+                    e.printStackTrace();
+                    closeAll();
+                } catch (SocketTimeoutException e) {
+                    continue;
+                } catch (IOException e) {
+                    System.err.println("Произошла ошибка ввода/вывода в момент рассылки широковещательных сообщений!");
+                    e.printStackTrace();
                     closeAll();
                 }
             }
         };
-        Runnable accepter = () -> {
-            try {
-                if (!portAvailable(6666)) System.out.println("В сети уже присутствует сервер с данным портом!");
-                else System.out.println("Порты свободны!");
-                SocketAddress sa = new InetSocketAddress(6666);
-                ServerSocket server = new ServerSocket();
-                server.setReuseAddress(true);
-                server.bind(sa);
-                //server = new ServerSocket(6666);
-                System.out.println("Сервер успешно запущен! Ожидаем подключения клиентов...");
-                while (true) {
-                    Socket socket = server.accept();
-                    Connection con = new Connection(socket);
-                    connections.add(con);
-                    con.start();
-                    System.out.println("Клиент с ip " + socket.getInetAddress().getHostAddress() + " подключился!");
-                    System.out.println("Всего клиентов " + connections.size());
-                }
-
-            } catch (IOException e) {
-                System.err.println("Не удалось создать сокет на данном порту, либо порт уже занят другим сервером, либо неполадки в сети.!");
-                System.exit(0);
-            } finally {
-                closeAll();
-            }
-        };
-
         new Thread(broadcast).start();
-        new Thread(accepter).start();
         Scanner sc = new Scanner(System.in);
         while (true) {
-            String answer = sc.nextLine();
-            switch (answer.toLowerCase()) {
+            String command = sc.nextLine();
+            switch (command.toLowerCase()) {
                 case "//command":
                     System.out.println("//list - список всех участников, //exit - выход из приложения, //exall - отключить всех пользователей");
                     break;
@@ -93,10 +75,10 @@ class Server {
                     closeAll();
                     break;
                 case "//list":
-                    if (connections.size() > 0) {
-                        synchronized (connections) {
+                    if (userThreads.size() > 0) {
+                        synchronized (userThreads) {
                             System.out.println("Список участников:");
-                            for (Connection i : connections) {
+                            for (UserThread i : userThreads) {
                                 System.out.println("[" + i.id + "] " + i.name);
                             }
                         }
@@ -106,11 +88,6 @@ class Server {
                     break;
                 case "//exit":
                     System.out.println("Выход из приложения");
-                    try {
-                        server.close();
-                    } catch (IOException e) {
-                        System.out.println("Ошибка закрытия сервера");
-                    }
                     System.exit(0);
                 default:
                     System.out.println("Неизвестная комманда! Для вывода списка всех комманд введите //command.");
@@ -120,60 +97,76 @@ class Server {
     }
 
     private void closeAll() {
-        System.out.println("Отключаем клиентов");
-        synchronized (connections) {
-            for (Connection i : connections) {
-                (i).close((i).getYourId());
+        try {
+            serverSocket.close();
+            System.out.println("Отключаем клиентов");
+            synchronized (userThreads) {
+                for (UserThread i : userThreads) {
+                    (i).close();
+                }
             }
-        }
-
-    }
-
-    private boolean portAvailable(int port) {
-        try (Socket ignored = new Socket("localhost", port)) {
-            return false;
-        } catch (IOException ignored) {
-            return true;
+        } catch (IOException e) {
+            System.err.println("Ошибка остановка сервера и клиентов.");
+            e.printStackTrace();
         }
     }
 
-    private class Connection extends Thread {
+    private class UserThread extends Thread {
         private BufferedReader in;
         private PrintWriter out;
+        private ObjectOutputStream oos;
+        private ObjectInputStream ois;
         private Socket socket;
         private String name = "";
         private int id;
+        private Message message;
         final Random random = new Random();
 
-        Connection(Socket socket) {
+        UserThread(Socket socket) {
             this.socket = socket;
             try {
                 in = new BufferedReader(new InputStreamReader(
                         socket.getInputStream()));
                 out = new PrintWriter(socket.getOutputStream(), true);
+                ois  = new ObjectInputStream(this.socket.getInputStream());
+                oos = new ObjectOutputStream(this.socket.getOutputStream());
             } catch (IOException e) {
                 System.err.println("Произошла ошибка при подключении.");
             }
+
         }
 
         @Override
         public void run() {
             try {
-                name = in.readLine();
-                id = random.nextInt(100) + 1;
-                out.println("Ваш id:" + id);
-                synchronized (connections) {
-                    connections.stream().filter(i -> i.getYourId() != id).forEach(i -> (i).out.println("[" + id + "] " + name + " вошёл в чат"));
+                this.message = (Message) ois.readObject();
+                this.name = this.message.getName();
+                this.id = random.nextInt(100) + 1;
+
+                if (! this.message.getMessage().equals(Const.HELLO_MESSAGE)) {
+                    System.out.println("[" + this.message.getId() + "] " + this.message.getName() + " : " + this.message.getMessage());
+                    messageHistory.add(this.message);
+                } else {
+                    oos.writeObject(messageHistory);
+                    synchronized (userThreads) {
+                        userThreads.stream().filter(i -> i.getUserId() != id).forEach(i -> {
+                            try {
+                                (i).oos.writeObject(new Message("Server-Bot", "[" + id + "] " + name + " вошёл в чат", this.id));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        });
+                    }
                 }
                 String str;
                 while (true) {
                     str = in.readLine();
                     if (str.equals("//exit")) break;
                     if (str.equals("//list")) {
-                        synchronized (connections) {
+                        synchronized (userThreads) {
                             out.println("Список участников:");
-                            for (Connection i : connections) {
-                                if (id != i.getYourId()) {
+                            for (UserThread i : userThreads) {
+                                if (id != i.getUserId()) {
                                     out.println("[" + i.id + "] " + i.name);
                                 }
                             }
@@ -185,11 +178,11 @@ class Server {
                         sid = Integer.parseInt(str.substring(str.indexOf("[") + 1, str.indexOf("]")));
                         str = str.replace("[" + sid + "]", "[приват]");
                     }
-                    synchronized (connections) {
-                        for (Connection i : connections) {
+                    synchronized (userThreads) {
+                        for (UserThread i : userThreads) {
                             if (sid != 0) {
-                                if (sid == i.getYourId()) {
-                                    System.out.println("sid= " + sid + " id= " + i.getYourId());
+                                if (sid == i.getUserId()) {
+                                    System.out.println("sid= " + sid + " id= " + i.getUserId());
                                     i.out.println("[" + id + "] " + name + ": " + str);
                                 }
                             } else {
@@ -199,36 +192,39 @@ class Server {
                     }
                 }
 
-                close(id);
+                close();
 
             } catch (IOException e) {
                 System.err.println("Произошла непредвиденная ошибка. Подключение " + "[" + id + "] " + name + " будет закрыто.");
-                close(id);
+                close();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
             }
         }
 
-        int getYourId() {
-            return id;
+        int getUserId() {
+            return this.id;
         }
 
-        void close(int id) {
-            System.out.println("0");
-            synchronized (connections) {
-                for (Connection connection : connections) {
-                    if (connection.getYourId() != id) {
-                        (connection).out.println("[" + id + "] " + name + " вышел из чата");
+        String getUserName() {
+            return this.name;
+        }
+
+        void close() {
+            synchronized (userThreads) {
+                for (UserThread i : userThreads) {
+                    if (i.getUserId() != this.getUserId()) {
+                        (i).out.println("[" + this.getUserId() + "] " + this.getUserName() + " вышел из чата");
                     }
                 }
             }
             try {
-                System.out.println("1");
                 in.close();
-                System.out.println("2");
                 out.close();
                 System.out.println("Клиент с ip " + socket.getInetAddress().getHostAddress() + " отключился!");
                 socket.close();
-                connections.remove(this);
-                System.out.println("Осталось клиентов " + connections.size());
+                userThreads.remove(this);
+                System.out.println("Осталось клиентов " + userThreads.size());
             } catch (IOException e) {
                 System.err.println("При закрытии подключения " + "[" + id + "] " + name + " произошла ошибка!");
             }

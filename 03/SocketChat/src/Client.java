@@ -53,6 +53,7 @@ class Client {
             DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
             ds.receive(packet);
             ds.close();
+            System.out.println("Сервер найден, подключаюсь...");
             client = new Socket(packet.getAddress().getHostAddress(),6666);
             System.out.println("Поиск и подключение к серверу выполнено успешно. На сервере находится " + new String(packet.getData(), 0, packet.getLength()) + " посетителей!");
         } catch (IOException e) {
