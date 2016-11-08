@@ -11,9 +11,20 @@ class Server {
     private DatagramPacket datagramPacket = null;
     private InetAddress inetAddress = null;
     private ServerSocket serverSocket = null;
+    private String serverName;
 
     Server() {
         try {
+            while(true) {
+                System.out.println("Введите имя сервера");
+                Scanner scanName = new Scanner(System.in);
+                serverName = scanName.nextLine();
+                System.out.println("Установить имя сервера " + serverName + "? (да/нет)");
+                String ans = scanName.nextLine();
+                if(ans.equalsIgnoreCase("да")) {
+                    break;
+                }
+            }
             SocketAddress serverAddress = new InetSocketAddress(Const.SERVER_PORT);
             serverSocket = new ServerSocket();
             serverSocket.setReuseAddress(true);
@@ -23,11 +34,11 @@ class Server {
             datagramSocket.setBroadcast(true);
             String hostAddress = InetAddress.getLocalHost().getHostAddress();
             StringBuilder stringBuilder = new StringBuilder();
-            Scanner scanner = new Scanner(hostAddress);
-            scanner.useDelimiter("\\.");
-            stringBuilder.append(scanner.next()).append(".");
-            stringBuilder.append(scanner.next()).append(".");
-            stringBuilder.append(scanner.next()).append(".");
+            Scanner scha = new Scanner(hostAddress);
+            scha.useDelimiter("\\.");
+            stringBuilder.append(scha.next()).append(".");
+            stringBuilder.append(scha.next()).append(".");
+            stringBuilder.append(scha.next()).append(".");
             stringBuilder.append(255);
             inetAddress = InetAddress.getByName(stringBuilder.toString());
         } catch (IOException e) {
@@ -38,7 +49,7 @@ class Server {
             while (true) {
                 try {
                     byte data[] = new byte[0];
-                    data = String.valueOf(userThreads.size()).getBytes();
+                    data = String.valueOf(serverName + "/" + userThreads.size()).getBytes();
                     datagramPacket = new DatagramPacket(data, data.length, inetAddress, Const.BROADCAST_PORT);
                     assert datagramSocket != null;
                     datagramSocket.send(datagramPacket);
