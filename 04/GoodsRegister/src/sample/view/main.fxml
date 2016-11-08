@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller.Controller">
+    <children>
+        <SplitPane dividerPositions="0.34813753581661894" prefHeight="255.0" prefWidth="500.0" style="-fx-background-color: lightgrey;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <items>
+                <AnchorPane fx:id="paneButtons" minHeight="0.0" minWidth="0.0" prefHeight="293.0" prefWidth="230.0">
+                    <children>
+                        <Button fx:id="listStock" layoutX="5.0" layoutY="15.0" mnemonicParsing="false" onAction="#stocks" prefHeight="25.0" prefWidth="232.0" text="Склады" />
+                        <Button fx:id="listProduct" layoutX="5.0" layoutY="55.0" mnemonicParsing="false" onAction="#products" prefHeight="25.0" prefWidth="232.0" text="Товары" />
+                        <Button fx:id="findProduct" layoutX="5.0" layoutY="95.0" mnemonicParsing="false" onAction="#finder" prefHeight="25.0" prefWidth="232.0" text="Поиск товаров" />
+                  <Button fx:id="exitBtn" cancelButton="true" layoutX="4.0" layoutY="467.0" mnemonicParsing="false" onAction="#closeApp" prefHeight="25.0" prefWidth="232.0" text="Выход" />
+                    </children>
+                </AnchorPane>
+                <AnchorPane fx:id="paneContent" minHeight="0.0" minWidth="0.0" prefHeight="498.0" prefWidth="457.0">
+               <children>
+                  <Label layoutX="19.0" layoutY="14.0" text="АРМ &quot;Управление складами&quot;">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+               </children></AnchorPane>
+            </items>
+        </SplitPane>
+    </children>
+</AnchorPane>
