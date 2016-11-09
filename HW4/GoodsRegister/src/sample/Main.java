@@ -14,11 +14,10 @@ public class Main extends Application {
         Controller.STAGE = primaryStage;
         primaryStage.setTitle("АРМ \"Управление складами\"");
         primaryStage.setScene(new Scene(root, 700, 500));
-        primaryStage.setResizable(true);
+        primaryStage.setResizable(false);
         primaryStage.show();
 
     }
-
 
     public static void main(String[] args) {
         launch(args);

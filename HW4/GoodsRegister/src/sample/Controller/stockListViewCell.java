@@ -5,11 +5,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.GridPane;
-import sample.Model.stockModel;
+import sample.Model.Stock;
 
 import java.io.IOException;
 
-public class stockListViewCell extends ListCell<stockModel> {
+public class stockListViewCell extends ListCell<Stock> {
     @FXML
     private Label stockId;
     @FXML
@@ -18,7 +18,7 @@ public class stockListViewCell extends ListCell<stockModel> {
     private GridPane paneStock;
     private FXMLLoader mLLoaderStock;
     @Override
-    protected void updateItem(stockModel stock, boolean empty) {
+    protected void updateItem(Stock stock, boolean empty) {
         super.updateItem(stock, empty);
          if(empty || stock == null) {
             setText(null);

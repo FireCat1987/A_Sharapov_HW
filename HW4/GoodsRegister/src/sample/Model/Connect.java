@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class Connect {
     private final String name = "padmin";
-    private final String password = "pass";
+    private final String password = "123456";
     private final String path = "jdbc:postgresql://localhost:5434/mydb";
     private Connection connection = null;
 

@@ -1,17 +1,17 @@
 package sample.Model;
 
-public class stockModel {
+public class Stock {
     private int stockId;
     private String stockName;
     private String stockDesc;
 
-    public stockModel(int id, String name) {
+    public Stock(int id, String name) {
         this.stockId = id;
         this.stockName = name;
         this.stockDesc = "";
     }
 
-    public stockModel(int id, String name, String desc) {
+    public Stock(int id, String name, String desc) {
         this.stockId = id;
         this.stockName = name;
         this.stockDesc = desc;

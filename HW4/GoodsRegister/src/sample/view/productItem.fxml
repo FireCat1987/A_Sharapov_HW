@@ -5,10 +5,11 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="paneProduct" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1">
+<GridPane fx:id="paneProduct" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1">
 <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
-    <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="190.0" prefWidth="190.0" />
+    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="360.0" minWidth="360.0" prefWidth="360.0" />
+    <ColumnConstraints maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
 </columnConstraints>
 <rowConstraints>
     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -16,5 +17,6 @@
 <children>
     <Label fx:id="productId" text="Label" GridPane.columnIndex="0" />
     <Label fx:id="productName" text="Label" GridPane.columnIndex="1" />
+    <Label fx:id="productPrice" text="Label" GridPane.columnIndex="2" />
 </children>
 </GridPane>

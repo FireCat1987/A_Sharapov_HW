@@ -1,23 +1,23 @@
 package sample.Model;
 
-public class productModel {
+public class Product {
     private int productId;
     private String productName;
-    private String productDesc;
+    private Double productPrice;
     private int productStockId;
 
 
-    public productModel(int id, String name, int stockId, String desc) {
+    public Product(int id, String name, int stockId, Double price) {
         this.productId = id;
         this.productName = name;
-        this.productDesc = desc;
+        this.productPrice = price;
         this.productStockId = stockId;
     }
 
-    public productModel(int id, String name, int stockId) {
+    public Product(int id, String name, int stockId) {
         this.productId = id;
         this.productName = name;
-        this.productDesc = "";
+        this.productPrice = 0.0;
         this.productStockId = stockId;
     }
 
@@ -37,12 +37,12 @@ public class productModel {
         this.productName = productName;
     }
 
-    public String getProductDesc() {
-        return productDesc;
+    public Double getProductPrice() {
+        return productPrice;
     }
 
-    public void setProductDesc(String productDesc) {
-        this.productDesc = productDesc;
+    public void setProductPrice(Double productPrice) {
+        this.productPrice = productPrice;
     }
 
     public int getProductStock() {
