@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.*?>
+<GridPane fx:id="paneProduct" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.112"
+          xmlns:fx="http://javafx.com/fxml/1">
+    <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0"/>
+        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="250.0" minWidth="250.0" prefWidth="250.0"/>
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0"/>
+        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="110.0" minWidth="110.0" prefWidth="110.0"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+    </rowConstraints>
+    <Label fx:id="productIdF" text="Label" GridPane.columnIndex="0"/>
+    <Label fx:id="productNameF" text="Label" GridPane.columnIndex="1"/>
+    <Label fx:id="productPriceF" text="Label" GridPane.columnIndex="2"/>
+    <Label fx:id="stockNameF" text="Label" GridPane.columnIndex="3"/>
+</GridPane>

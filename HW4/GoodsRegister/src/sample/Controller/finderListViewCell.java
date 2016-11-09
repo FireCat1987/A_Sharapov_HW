@@ -9,27 +9,27 @@ import sample.Model.Product;
 
 import java.io.IOException;
 
-
-class productListViewCell extends ListCell<Product> {
+class finderListViewCell extends ListCell<Product> {
     @FXML
-    private Label productId;
+    private Label productIdF;
     @FXML
-    private Label productName;
+    private Label productNameF;
     @FXML
-    private Label productPrice;
+    private Label productPriceF;
+    @FXML
+    private Label stockNameF;
     @FXML
     private GridPane paneProduct;
     private FXMLLoader mLLoaderProduct;
-
     @Override
     protected void updateItem(Product product, boolean empty) {
         super.updateItem(product, empty);
-        if (empty || product == null) {
+        if(empty || product == null) {
             setText(null);
             setGraphic(null);
         } else {
             if (mLLoaderProduct == null) {
-                mLLoaderProduct = new FXMLLoader(getClass().getResource("../view/productItem.fxml"));
+                mLLoaderProduct = new FXMLLoader(getClass().getResource("../view/find.fxml"));
                 mLLoaderProduct.setController(this);
                 try {
                     mLLoaderProduct.load();
@@ -37,9 +37,10 @@ class productListViewCell extends ListCell<Product> {
                     e.printStackTrace();
                 }
             }
-            productId.setText(String.valueOf(product.getProductId()));
-            productName.setText(product.getProductName());
-            productPrice.setText(product.getProductCost().toString());
+            productIdF.setText(String.valueOf(product.getProductId()));
+            productNameF.setText(product.getProductName());
+            productPriceF.setText(product.getProductCost().toString());
+            stockNameF.setText(product.getProductStockName());
             setText(null);
             setGraphic(paneProduct);
         }

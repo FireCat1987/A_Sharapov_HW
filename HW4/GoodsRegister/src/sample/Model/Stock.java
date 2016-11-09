@@ -41,4 +41,10 @@ public class Stock {
     public void setStockDesc(String stockDesc) {
         this.stockDesc = stockDesc;
     }
+
+    @Override
+    public String toString() {
+
+        return getStockName().replace("[", "").replace("]", "");
+    }
 }

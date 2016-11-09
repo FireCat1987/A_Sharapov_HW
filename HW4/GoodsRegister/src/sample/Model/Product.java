@@ -3,21 +3,28 @@ package sample.Model;
 public class Product {
     private int productId;
     private String productName;
-    private Double productPrice;
+    private Double productCost;
     private int productStockId;
+    private String productStockName;
 
 
-    public Product(int id, String name, int stockId, Double price) {
+    public Product(int id, String name, int stockId, Double cost) {
         this.productId = id;
         this.productName = name;
-        this.productPrice = price;
+        this.productCost = cost;
         this.productStockId = stockId;
     }
 
-    public Product(int id, String name, int stockId) {
+    public Product(int id, String name, Double cost, String productStockName) {
         this.productId = id;
         this.productName = name;
-        this.productPrice = 0.0;
+        this.productCost = cost;
+        this.productStockName = productStockName;
+    }
+
+    public Product(String name, int stockId, Double cost) {
+        this.productName = name;
+        this.productCost = cost;
         this.productStockId = stockId;
     }
 
@@ -37,19 +44,27 @@ public class Product {
         this.productName = productName;
     }
 
-    public Double getProductPrice() {
-        return productPrice;
+    public Double getProductCost() {
+        return productCost;
     }
 
-    public void setProductPrice(Double productPrice) {
-        this.productPrice = productPrice;
+    public void setProductCost(Double productCost) {
+        this.productCost = productCost;
     }
 
-    public int getProductStock() {
+    int getProductStock() {
         return productStockId;
     }
 
     public void setProductStock(int productStockId) {
         this.productStockId = productStockId;
+    }
+
+    public String getProductStockName() {
+        return productStockName;
+    }
+
+    public void setProductStockName(String productStockName) {
+        this.productStockName = productStockName;
     }
 }

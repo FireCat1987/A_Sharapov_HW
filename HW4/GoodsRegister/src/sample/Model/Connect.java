@@ -7,11 +7,10 @@ import java.sql.SQLException;
 public class Connect {
     private final String name = "padmin";
     private final String password = "123456";
-    private final String path = "jdbc:postgresql://localhost:5434/mydb";
+    private final String path = "jdbc:postgresql://localhost:5432/mydb";
     private Connection connection = null;
 
-    public Connection ConnectBD()
-    {
+    public Connection ConnectBD() {
         try {
             Class.forName("org.postgresql.Driver");
         } catch (ClassNotFoundException e) {
@@ -19,29 +18,23 @@ public class Connect {
         }
 
         try {
-            connection= DriverManager.getConnection(path,name,password);
+            connection = DriverManager.getConnection(path, name, password);
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        if(connection!=null){
+        if (connection != null) {
             System.out.println("Success");
         }
 
         return connection;
     }
 
-    public boolean IsConnection()
-    {
-        if(connection!=null){
-            return true;
-        }else {
-            return false;
-        }
+    public boolean IsConnection() {
+        return connection != null;
     }
 
-    public void connectClose()
-    {
+    public void connectClose() {
         try {
             connection.close();
         } catch (SQLException e) {

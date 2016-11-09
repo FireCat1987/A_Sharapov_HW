@@ -9,7 +9,7 @@ import sample.Model.Stock;
 
 import java.io.IOException;
 
-public class stockListViewCell extends ListCell<Stock> {
+class stockListViewCell extends ListCell<Stock> {
     @FXML
     private Label stockId;
     @FXML
@@ -17,10 +17,11 @@ public class stockListViewCell extends ListCell<Stock> {
     @FXML
     private GridPane paneStock;
     private FXMLLoader mLLoaderStock;
+
     @Override
     protected void updateItem(Stock stock, boolean empty) {
         super.updateItem(stock, empty);
-         if(empty || stock == null) {
+        if (empty || stock == null) {
             setText(null);
             setGraphic(null);
         } else {
