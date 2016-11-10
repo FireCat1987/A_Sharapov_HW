@@ -1,62 +1,127 @@
 package twitter;
 
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class TweetService {
 
-    private static int idst = 0;
-    private static int idsc = 0;
+    private final String name = "padmin";
+    private final String password = "123456";
+    private final String path = "jdbc:postgresql://localhost:5432/twitter";
+    private Connection connection = null;
+    private List<Tweet> tweets = new ArrayList<>();
 
-    private static List<Tweet> tweets = new ArrayList<Tweet>();
-    private static List<Comment> comments = new ArrayList<Comment>();
-
-    public static List<Tweet> getAllTweet() {
-        return tweets;
+    TweetService() {
+        ConnectBD();
     }
 
-    public static List<Comment> getAllComments() {
-        return comments;
-    }
-
-    public static boolean addTweet(String message) {
-        Tweet tweet = new Tweet();
-        tweet.setMessage(message);
-        tweet.setCreatedAt(new Date());
-        tweet.setId(++idst);
-        return tweets.add(tweet);
-    }
-
-    public static boolean addComment(long tweetId, String message) {
-        Comment comment = new Comment();
-        comment.setMessage(message);
-        comment.setCreatedAt(new Date());
-        comment.setTweetAt(tweetId);
-        for (Tweet tweet : tweets) {
-            if (tweet.getId() == tweetId) {
-                tweet.setCommentKol(tweet.getCommentKol()+1);
-            }
+    public void ConnectBD() {
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
-        comment.setId(++idsc);
-        return comments.add(comment);
+        try {
+            connection = DriverManager.getConnection(path, name, password);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        if (connection != null) {
+            System.out.println("Success");
+        }
     }
 
-    public static Tweet getTweetById(long id) {
-        for (Tweet tweet : tweets) {
-            if (tweet.getId() == id) {
-                return tweet;
-            }
+    public void connectClose() {
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return null;
     }
-    public static List<Comment> getCommentById(long tweetId) {
-        List<Comment> commentList = new ArrayList<Comment>();
-        for (Comment comment : comments) {
-            if (comment.getTweetAt() == tweetId) {
-                commentList.add(comment);
+
+    public List<Tweet> getAllTweets() {
+        try {
+            List<Tweet> finalResult = new ArrayList<>();
+            Statement statement = connection.createStatement();
+            ResultSet result = statement.executeQuery("SELECT * FROM tweets");
+            while (result.next()) {
+                finalResult.add(new Tweet(result.getInt("id"), result.getString("message"), result.getDate("createAt")));
             }
+            return finalResult;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
         }
-        return commentList;
     }
+
+
+    public void addTweet(String message) {
+        Tweet tweet = new Tweet(message, new Date());
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("INSERT INTO  tweets (message, createat) VALUES (" + "'" + tweet.getMessage() + "'" + "," + "'" + tweet.getCreatedAt() + "'" + ") ");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void delTweet(int id) {
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("DELETE FROM tweets WHERE id= " + "'" + id + "'");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Tweet getTweetById(int id) {
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet result = statement.executeQuery("SELECT * FROM tweets WHERE id='" + id + "'");
+            result.next();
+            return new Tweet(result.getInt("id"), result.getString("message"), result.getDate("createAt"));
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
+    public List<Comment> getCommentsById(int tweetat) {
+        try {
+            List<Comment> finalResult = new ArrayList<>();
+            Statement statement = connection.createStatement();
+            ResultSet result = statement.executeQuery("SELECT * FROM comments WHERE tweetat='" + tweetat + "'");
+            while (result.next()) {
+                finalResult.add(new Comment(result.getInt("id"), result.getString("comment"), result.getInt("tweetat")));
+            }
+            return finalResult;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+    public void addComment(String message, int tweetAt) {
+        Comment comment = new Comment(message, tweetAt);
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("INSERT INTO  comments (comment, tweetat) VALUES (" + "'" + comment.getComment() + "'" + "," + "'" + comment.getTweetAt() + "'" + ") ");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void delComment(int id) {
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("DELETE FROM comments WHERE id= " + "'" + id + "'");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

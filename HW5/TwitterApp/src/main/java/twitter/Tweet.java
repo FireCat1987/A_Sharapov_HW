@@ -5,13 +5,27 @@ import java.util.Date;
 
 public class Tweet {
 
-    private long id;
-
+    private int id;
     private String message;
-
     private Date createdAt;
 
-    private int commentKol = 0;
+    public Tweet(int id, String message, Date createAt) {
+        this.id = id;
+         this.message = message;
+        this.createdAt = createAt;
+    }
+    public Tweet(String message, Date createAt) {
+        this.message = message;
+        this.createdAt = createAt;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getMessage() {
         return message;
@@ -29,28 +43,13 @@ public class Tweet {
         this.createdAt = createdAt;
     }
 
-    long getId() {
-        return id;
-    }
-
-    void setId(long id) {
-        this.id = id;
-    }
-
     @Override
     public String toString() {
         return "Tweet{" +
+                "id='" + id + '\'' +
                 "message='" + message + '\'' +
-                ", createdAt=" + createdAt + '\'' +
-                ", commentKol=" + commentKol +
+                ", createdAt=" + createdAt +
                 '}';
     }
 
-    public int getCommentKol() {
-        return commentKol;
-    }
-
-    public void setCommentKol(int commentKol) {
-        this.commentKol = commentKol;
-    }
 }

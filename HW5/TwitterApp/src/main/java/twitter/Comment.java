@@ -1,32 +1,23 @@
 package twitter;
 
 
-import java.util.Date;
-
 public class Comment {
 
     private long id;
 
-    private String message;
-
-    private Date createdAt;
+    private String comment;
 
     private long tweetAt;
 
-    public String getMessage() {
-        return message;
+    public Comment(long id, String comment, long tweetAt) {
+        this.id = id;
+        this.comment = comment;
+        this.tweetAt = tweetAt;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
+    public Comment(String comment, long tweetAt) {
+        this.comment = comment;
+        this.tweetAt = tweetAt;
     }
 
     public long getId() {
@@ -37,14 +28,6 @@ public class Comment {
         this.id = id;
     }
 
-    @Override
-    public String toString() {
-        return "Comment{" +
-                "message='" + message + '\'' +
-                ", createdAt=" + createdAt + '\'' +
-                ", tweetAt=" + tweetAt +
-                '}';
-    }
 
     public long getTweetAt() {
         return tweetAt;
@@ -52,5 +35,22 @@ public class Comment {
 
     public void setTweetAt(long tweetAt) {
         this.tweetAt = tweetAt;
+    }
+
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "message='" + comment + '\'' +
+                ", tweetAt=" + tweetAt +
+                '}';
+    }
+
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }

@@ -2,6 +2,7 @@ package twitter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -10,7 +11,13 @@ import java.util.List;
 
 @WebServlet(urlPatterns = "/tweet/*")
 public class TweetServlet extends HttpServlet {
+    private TweetService service;
 
+    @Override
+    public void init() throws ServletException {
+        service = new TweetService();
+        super.init();
+    }
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html;charset=utf-8");
@@ -18,11 +25,17 @@ public class TweetServlet extends HttpServlet {
         System.out.println(req.getRequestURI());
         String[] split = req.getRequestURI().split("/");
         if (split.length == 3) {
-            long l = Long.parseLong(split[2]);
-            Tweet tweet = TweetService.getTweetById(l);
-            List<Comment> commentList = TweetService.getCommentById(l);
+            int l = Integer.parseInt(split[2]);
+            Tweet tweet = service.getTweetById(l);
+            List<Comment> commentList = service.getCommentsById(l);
             req.setAttribute("tweet", tweet);
             req.setAttribute("comments",commentList);
+            Cookie[] cookies = req.getCookies();
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("backcolor")) {
+                    req.setAttribute(cookie.getName(), cookie.getValue());
+                }
+            }
             req.getRequestDispatcher("/tweet.jsp").forward(req, resp);
         } else {
             resp.sendRedirect("/tweeter");
@@ -35,9 +48,9 @@ public class TweetServlet extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
         String[] split = req.getRequestURI().split("/");
         if (split.length == 3) {
-            long l = Long.parseLong(split[2]);
+            int l = Integer.parseInt(split[2]);
             String message = req.getParameter("message");
-            TweetService.addComment(l, message);
+            service.addComment(message, l);
             resp.sendRedirect("/tweet/" + l);
         }
     }
