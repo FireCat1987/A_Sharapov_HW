@@ -5,7 +5,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class TweetService {
+
+class TweetService {
 
     private final String name = "padmin";
     private final String password = "123456";
@@ -17,7 +18,8 @@ public class TweetService {
         ConnectBD();
     }
 
-    public void ConnectBD() {
+
+    private void ConnectBD() {
         try {
             Class.forName("org.postgresql.Driver");
         } catch (ClassNotFoundException e) {
@@ -41,7 +43,8 @@ public class TweetService {
         }
     }
 
-    public List<Tweet> getAllTweets() {
+    List<Tweet> getAllTweets() {
+
         try {
             List<Tweet> finalResult = new ArrayList<>();
             Statement statement = connection.createStatement();
@@ -57,7 +60,8 @@ public class TweetService {
     }
 
 
-    public void addTweet(String message) {
+
+    void addTweet(String message) {
         Tweet tweet = new Tweet(message, new Date());
         try {
             Statement statement = connection.createStatement();
@@ -67,16 +71,26 @@ public class TweetService {
         }
     }
 
-    public void delTweet(int id) {
+    void editTweet(int id, String message) {
         try {
             Statement statement = connection.createStatement();
-            statement.execute("DELETE FROM tweets WHERE id= " + "'" + id + "'");
+            statement.execute("UPDATE tweets SET  message = '" + message + "' WHERE id = '" + id + "'");
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public Tweet getTweetById(int id) {
+    void delTweet(int id) {
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("DELETE FROM tweets WHERE id= " + "'" + id + "'");
+            statement.execute("DELETE FROM comments WHERE tweetat= " + "'" + id + "'");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    Tweet getTweetById(int id) {
         try {
             Statement statement = connection.createStatement();
             ResultSet result = statement.executeQuery("SELECT * FROM tweets WHERE id='" + id + "'");
@@ -89,7 +103,7 @@ public class TweetService {
 
     }
 
-    public List<Comment> getCommentsById(int tweetat) {
+    List<Comment> getCommentsById(int tweetat) {
         try {
             List<Comment> finalResult = new ArrayList<>();
             Statement statement = connection.createStatement();
@@ -105,7 +119,7 @@ public class TweetService {
     }
 
 
-    public void addComment(String message, int tweetAt) {
+    void addComment(String message, int tweetAt) {
         Comment comment = new Comment(message, tweetAt);
         try {
             Statement statement = connection.createStatement();
@@ -115,7 +129,7 @@ public class TweetService {
         }
     }
 
-    public void delComment(int id) {
+    void delComment(int id) {
         try {
             Statement statement = connection.createStatement();
             statement.execute("DELETE FROM comments WHERE id= " + "'" + id + "'");

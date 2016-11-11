@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.List;
 
 @WebServlet(urlPatterns = "/twitter")
@@ -22,7 +23,26 @@ public class TweeterServlet extends HttpServlet {
     }
 
     @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+        BufferedReader reader = req.getReader();
+        String line = reader.readLine();
+        if(!line.equals("")) {
+            line = URLDecoder.decode(line.split("&")[0].split("=")[1], "UTF-8");
+            service.editTweet(Integer.parseInt(req.getParameter("id")), line);
+            resp.setContentType("text/html");
+            resp.setCharacterEncoding("UTF-8");
+            resp.getWriter().write(line);
+        } else {
+            resp.setContentType("text/html");
+            resp.setCharacterEncoding("UTF-8");
+            resp.getWriter().write("Изменение не удалось, входящая строка пуста! Пожалуйста обновите страницу");
+        }
+    }
+
+    @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("text/html;charset=utf-8");
         req.setCharacterEncoding("UTF-8");
         List<Tweet> tweets = service.getAllTweets();
         req.setAttribute("tweets", tweets);
@@ -39,10 +59,11 @@ public class TweeterServlet extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
         BufferedReader reader = req.getReader();
         String line = reader.readLine();
         if(!line.equals("")) {
-            System.out.println("Delete id " + Integer.parseInt(line));
+            System.out.println("Delete tweet id " + Integer.parseInt(line));
             service.delTweet(Integer.parseInt(line));
         }
         resp.setContentType("text/plain");  // Set content type of the response so that jQuery knows what it can expect.
@@ -52,6 +73,7 @@ public class TweeterServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("text/html;charset=utf-8");
         req.setCharacterEncoding("UTF-8");
         String message = req.getParameter("message");
         if(!message.equals("")) {

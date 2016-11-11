@@ -9,14 +9,6 @@
          version="3.1">
     <display-name>Switter Web Application</display-name>
 
-    <servlet>
-        <servlet-name>start-servlet</servlet-name>
-        <servlet-class>twitter.StartServlet</servlet-class>
-    </servlet>
 
-    <servlet-mapping>
-        <servlet-name>start-servlet</servlet-name>
-        <url-pattern>/</url-pattern>
-    </servlet-mapping>
 
 </web-app>
