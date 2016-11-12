@@ -1,5 +1,8 @@
 package twitter;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
@@ -11,9 +14,9 @@ import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.List;
 
-@WebServlet(urlPatterns = "/twitter")
+@Controller
 public class TweeterServlet extends HttpServlet {
-
+    @Autowired
     private TweetService service;
 
     @Override

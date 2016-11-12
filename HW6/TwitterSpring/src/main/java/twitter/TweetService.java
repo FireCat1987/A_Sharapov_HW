@@ -1,63 +1,44 @@
 package twitter;
 
-import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Service("TweetService")
-@Transactional
+
+@Repository
 class TweetService {
-    private static Logger logger = Logger.getLogger("service");
 
-    @Resource(name = "sessionFactory")
-    private SessionFactory sessionFactory;
+    @Autowired
+    DataSource dataSource; //look to application-context.xml bean id='dataSource' definition
 
-    private final String name = "padmin";
-    private final String password = "123456";
-    private final String path = "jdbc:postgresql://localhost:5432/twitter";
-    private Connection connection = null;
+    private JdbcTemplate jdbcTemplate;
+    @PostConstruct
+    public void init() {
+        System.out.println("JDBCExample postConstruct is called. datasource = " + dataSource);
+        jdbcTemplate = new JdbcTemplate(dataSource);
+    }
+
     private List<Tweet> tweets = new ArrayList<>();
 
-    TweetService() {
-        ConnectBD();
-    }
 
-    private void ConnectBD() {
-        try {
-            Class.forName("org.postgresql.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        try {
-            connection = DriverManager.getConnection(path, name, password);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        if (connection != null) {
-            System.out.println("Success");
-        }
-    }
-
-    public void connectClose() {
-        try {
-            connection.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
     List<Tweet> getAllTweets() {
-        logger.debug("Retrieving all tweets");
+
         Session session = sessionFactory.getCurrentSession();
+
         Query query = session.createQuery("FROM tweets");
         return query.list();
         /*try {
@@ -77,9 +58,7 @@ class TweetService {
 
     void addTweet(String message) {
         Tweet tweet = new Tweet(message, new Date());
-        logger.debug("Adding new tweet");
-        Session session = sessionFactory.getCurrentSession();
-        session.save(tweet);
+        this.JdbcTemplate
 
        /* try {
             Statement statement = connection.createStatement();
@@ -90,7 +69,7 @@ class TweetService {
     }
 
     void editTweet(int id, String message) {
-        logger.debug("Editing existing tweet");
+
         Session session = sessionFactory.getCurrentSession();
         Tweet existingTweet = (Tweet) session.get(Tweet.class, id);
 
@@ -110,7 +89,7 @@ class TweetService {
     }
 
     void delTweet(int id) {
-        logger.debug("Deleting existing tweet");
+
         Session session = sessionFactory.getCurrentSession();
         Tweet tweet = (Tweet) session.get(Tweet.class, id);
         session.delete(tweet);
