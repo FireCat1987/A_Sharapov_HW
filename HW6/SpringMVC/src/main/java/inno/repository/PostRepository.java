@@ -2,6 +2,8 @@ package inno.repository;
 
 import inno.model.Post;
 
+import javax.sql.DataSource;
+import java.sql.SQLException;
 import java.util.List;
 
 
@@ -11,7 +13,7 @@ public interface PostRepository {
 
     Post find(Long id);
 
-    boolean add(Post post);
+    void add(Post post);
 
-    boolean delete(Long id);
+    void delete(Long id);
 }

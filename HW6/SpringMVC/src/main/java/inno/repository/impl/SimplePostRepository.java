@@ -1,40 +1,46 @@
 package inno.repository.impl;
 
 import inno.model.Post;
+import inno.model.PostMapper;
 import inno.repository.PostRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+
 @Repository
 public class SimplePostRepository implements PostRepository {
 
-    private List<Post> posts = new ArrayList<>();
-
-    {
-        posts.add(new Post("Новость 1", " текст первой новости"));
-        posts.add(new Post("Новость 2", " текст первой пока новости"));
-        posts.add(new Post("Новость 3", " текст привет первой новости"));
-    }
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @Override
     public List<Post> findAll() {
-        return posts;
+        String SQL = "select * from Post";
+        return jdbcTemplate.query(SQL,
+                new PostMapper());
     }
 
     @Override
     public Post find(Long id) {
-        return posts.stream().filter(p -> Objects.equals(p.getId(), id)).findFirst().orElse(null);
+        String SQL = "select * from post where id = ?";
+        return jdbcTemplate.queryForObject(SQL,
+                new Object[]{id}, new PostMapper());
+
     }
 
     @Override
-    public boolean add(Post post) {
-        return posts.add(post);
+    public void add(Post post) {
+        String SQL = "insert into post (title, text, date) values (?, ?, ?)";
+        jdbcTemplate.update( SQL, post.getTitle(), post.getText(), post.getDate());
+        System.out.println("Created Record Title = " + post.getTitle() + " text = " + post.getText() + " date = " + post.getDate());
     }
 
     @Override
-    public boolean delete(Long id) {
-        return posts.removeIf(p -> Objects.equals(p.getId(), id));
+    public void delete(Long id) {
+        String SQL = "delete from post where id = ?";
+        jdbcTemplate.update(SQL, id);
+        System.out.println("Deleted Record with ID = " + id );
     }
 }

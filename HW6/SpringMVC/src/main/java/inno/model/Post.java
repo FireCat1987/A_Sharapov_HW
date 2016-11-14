@@ -4,20 +4,16 @@ import java.util.Date;
 
 public class Post {
 
-    private static long ids = 0;
-
     private String title;
     private String text;
     private Date date;
     private long id;
 
     public Post() {
-        this.id = ++ids;
         this.date = new Date();
     }
 
     public Post(String title, String text) {
-        this.id = ++ids;
         this.date = new Date();
         this.title = title;
         this.text = text;
