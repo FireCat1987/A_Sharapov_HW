@@ -1,6 +1,7 @@
 package inno.controller;
 
 
+import inno.model.Score;
 import inno.model.Student;
 import inno.model.SubjectType;
 import inno.repository.ScoreRepository;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -50,14 +52,37 @@ public class StudentController {
         return "redirect:/students";
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public String showStudent(@PathVariable("id") Integer id, ModelMap map) {
-        Student student = studentRepository.find(id);
-        student.setScores(scoreRepository.findByStudentId(id));
+    @RequestMapping(value = "/{student_id}", method = RequestMethod.GET)
+    public String showStudent(@PathVariable("student_id") Integer studentId, ModelMap map) {
+        Student student = studentRepository.find(studentId);
+        student.setScores(scoreRepository.findByStudentId(studentId));
         map.addAttribute("student", student);
+        map.addAttribute("score", new Score());
         map.addAttribute("subjects", SubjectType.values());
-        //map.addAttribute("comments", commentRepository.findByPostId(id));
         return "/students/show";
+    }
+
+    @RequestMapping(value = "/{student_id}", method = RequestMethod.DELETE)
+    public String deleteScore(@PathVariable("student_id") Integer studentId, ModelMap map, @RequestBody String scoreId) {
+        System.out.println("Delete score id " + Integer.parseInt(scoreId));
+        scoreRepository.remove(Integer.parseInt(scoreId));
+        return "forward:/students/"+studentId;
+    }
+
+    @RequestMapping(value = "/{student_id}", method = RequestMethod.POST)
+    public String addScoreToStudent(@PathVariable("student_id") Integer studentId, ModelMap map, @ModelAttribute("score") @Valid Score score, BindingResult result) {
+
+        if (result.hasErrors()) {
+            Student student = studentRepository.find(studentId);
+            student.setScores(scoreRepository.findByStudentId(studentId));
+            map.addAttribute("student", student);
+            map.addAttribute("subjects", SubjectType.values());
+            return "/students/show";
+        }
+        Student student = studentRepository.find(studentId);
+        score.setStudent(student);
+        scoreRepository.add(score);
+        return "redirect:/students/"+studentId;
     }
 
     @RequestMapping(value = "/{id}/delete", method = RequestMethod.GET)
@@ -69,7 +94,6 @@ public class StudentController {
     @RequestMapping(value = "/{id}/edit", method = RequestMethod.GET)
     public String editStudent(@PathVariable("id") Integer id, ModelMap map) {
         Student student = studentRepository.find(id);
-
         map.addAttribute("student", student);
         return "students/edit";
     }
