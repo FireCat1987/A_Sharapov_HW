@@ -1,13 +1,27 @@
 package inno.model;
 
+import javax.persistence.*;
 import java.util.Date;
-
+@Entity
+@Table(name="post")
+@SequenceGenerator(sequenceName = "post_id_seq", name = "postSequence")
 public class Post {
-
+    @Column
     private String title;
+    @Column
     private String text;
+    @Column
+    @Temporal(TemporalType.TIMESTAMP)
     private Date date;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "postSequence")
+    @Column(name="id")
     private long id;
+
+    @Transient
+    @Enumerated(EnumType.STRING)
+    private PostType type;
+
 
     public Post() {
         this.date = new Date();
