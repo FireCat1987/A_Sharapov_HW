@@ -56,7 +56,7 @@ public class StudentController {
         Student student = studentRepository.find(studentId);
         student.setScores(scoreRepository.findByStudentId(studentId));
         map.addAttribute("sumScore",student.getScores().stream().mapToInt(Score::getScore).sum());
-        map.addAttribute("avgScore", student.getScores().stream().mapToInt(Score::getScore).average().getAsDouble());
+        map.addAttribute("avgScore",student.getScores().stream().mapToInt(Score::getScore).average().orElse(0.0));
         map.addAttribute("student", student);
         map.addAttribute("score", new Score());
         map.addAttribute("subjects", SubjectType.values());

@@ -21,6 +21,11 @@
 
 
     <import resource="persistence-config.xml"/>
-
+<!--    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="inno.controller.MethodConvertingInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>-->
 
 </beans>

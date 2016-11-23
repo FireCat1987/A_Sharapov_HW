@@ -1,6 +1,7 @@
 package inno.repository.impl;
 
 
+import inno.model.Score;
 import inno.model.Student;
 import inno.repository.StudentRepository;
 import org.springframework.stereotype.Repository;
@@ -39,12 +40,22 @@ public class StudentRepositoryImpl implements StudentRepository {
 
     @Override
     public void update(Student student) {
+        TypedQuery<Score> query = em.createQuery(
+                "SELECT score from Score score WHERE score.student.id = :studentId", Score.class);
+        query.setParameter("studentId", student.getId());
+        student.setScores(query.getResultList());
         em.merge(student);
     }
 
     @Override
     public boolean remove(Integer id) {
-        em.remove(em.find(Student.class, id));
+        Student student = em.find(Student.class, id);
+        TypedQuery<Score> query = em.createQuery(
+                "SELECT score from Score score WHERE score.student.id = :studentId", Score.class);
+        query.setParameter("studentId", id);
+        student.setScores(query.getResultList());
+        em.remove(student);
+       /* em.remove(em.find(Student.class, id));*/
         return true;
     }
 

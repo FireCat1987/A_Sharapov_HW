@@ -1,10 +1,13 @@
 package inno.model;
 
+import org.hibernate.annotations.OnDelete;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
+
+import static org.hibernate.annotations.OnDeleteAction.CASCADE;
 
 @Entity
 @Table(name = "student")
@@ -28,8 +31,7 @@ public class Student implements Serializable {
     @Column(name = "studgroup")
     @NotEmpty
     private String studgroup;
-    @Transient
-    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(targetEntity = Score.class, mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Score> scores;
 
     public Student() {
