@@ -19,7 +19,7 @@
 <h1>Добро пожаловать управление стадентами!</h1>
 
 <form action="/students" method="get">
-    <input type="text" name="group" width="600px">
+    <input type="text" name="group" placeholder="введите номер группы..." width="600px">
     <input type="submit" value="Search">
 </form>
 

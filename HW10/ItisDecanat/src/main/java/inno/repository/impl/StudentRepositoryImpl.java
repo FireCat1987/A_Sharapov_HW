@@ -1,7 +1,6 @@
 package inno.repository.impl;
 
 
-import inno.model.Score;
 import inno.model.Student;
 import inno.repository.StudentRepository;
 import org.springframework.stereotype.Repository;
@@ -17,6 +16,7 @@ import java.util.List;
 public class StudentRepositoryImpl implements StudentRepository {
 
     @PersistenceContext
+    private
     EntityManager em;
 
     @Override
@@ -27,9 +27,8 @@ public class StudentRepositoryImpl implements StudentRepository {
 
     @Override
     public Student find(Integer id) {
-        Student student = em.find(Student.class, id);
 
-        return student;
+        return em.find(Student.class, id);
     }
 
     @Override

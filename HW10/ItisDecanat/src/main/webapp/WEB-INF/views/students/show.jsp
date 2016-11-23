@@ -13,6 +13,7 @@
             crossorigin="anonymous"></script>
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.3.6/css/bootstrap-colorpicker.css"/>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.3.6/js/bootstrap-colorpicker.min.js"></script>
     <script>
         $(document).ready(function () {
@@ -36,7 +37,28 @@
 
 <h1>${student.firstname} ${student.surname} ${student.lastname}</h1>
 <p>Номер группы: ${student.studgroup}</p>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6 alert alert-success">
+                    Суммарный балл за все предметы: ${sumScore}
+                </div>
+                <div class="col-sm-6 alert alert-info">
+                    Средний балл по всем предметам: ${avgScore}
+                </div>
 
+            </div>
+<%--            <div class="row">
+                <div class="col-sm-12 alert alert-warning">
+                    Средний балл по определенному предмету:  <select name="subject" id="selectsubject" onchange="$('span#avgonesubject').text($('#selectsubject').find('option:selected' ).text())">
+                    <c:forEach items="${subjects}" var="subject">
+                        <option value="${subject.ordinal()}">${subject.description}</option>
+                    </c:forEach>
+                </select>
+
+                    <span id="avgonesubject"></span>
+                </div>
+            </div>--%>
+        </div>
 <h2>Оценки: </h2>
 <form:form action="/students/${student.id}" method="post" modelAttribute="score">
     <table>
@@ -68,7 +90,7 @@
             <button type="button" class="close delete" aria-label="delete" data-id="${score.id}">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <p>${score.subjectType.description} - ${score.score}</p>
+            <p>${score.subjectType.description} - ${score.score} баллов;</p>
         </li>
     </c:forEach>
 </ul>

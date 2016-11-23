@@ -15,6 +15,7 @@ import java.util.List;
 public class ScoreRepositoryImpl implements ScoreRepository {
 
     @PersistenceContext
+    private
     EntityManager em;
 
     @Override
@@ -25,8 +26,7 @@ public class ScoreRepositoryImpl implements ScoreRepository {
 
     @Override
     public Score find(Integer id) {
-        Score score = em.find(Score.class, id);
-        return score;
+        return em.find(Score.class, id);
     }
 
     @Override

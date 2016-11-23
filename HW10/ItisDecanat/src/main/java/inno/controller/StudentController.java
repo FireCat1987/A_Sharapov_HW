@@ -11,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -56,6 +55,8 @@ public class StudentController {
     public String showStudent(@PathVariable("student_id") Integer studentId, ModelMap map) {
         Student student = studentRepository.find(studentId);
         student.setScores(scoreRepository.findByStudentId(studentId));
+        map.addAttribute("sumScore",student.getScores().stream().mapToInt(Score::getScore).sum());
+        map.addAttribute("avgScore", student.getScores().stream().mapToInt(Score::getScore).average().getAsDouble());
         map.addAttribute("student", student);
         map.addAttribute("score", new Score());
         map.addAttribute("subjects", SubjectType.values());
