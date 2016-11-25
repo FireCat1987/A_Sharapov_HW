@@ -15,12 +15,15 @@ public class GetMethodConvertingFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest hsr = (HttpServletRequest) servletRequest;
-        if (hsr.getMethod().equals("DELETE")) {
-            System.out.println("DELETE");
-            filterChain.doFilter(wrapRequest((HttpServletRequest) servletRequest), servletResponse);
+        System.out.println(hsr.getMethod());
+        filterChain.doFilter(servletRequest, servletResponse);
+        /*if (hsr.getMethod().equals("DELETE")) {
+            HttpServletRequest hsr1 = wrapRequest((HttpServletRequest) servletRequest);
+            System.out.println(hsr1.getMethod());
+            filterChain.doFilter(hsr1, servletResponse);
         } else {
             filterChain.doFilter(servletRequest, servletResponse);
-        }
+        }*/
     }
 
 

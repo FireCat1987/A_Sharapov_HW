@@ -18,7 +18,9 @@
     <script>
         $(document).ready(function () {
             $('button.delete').click(function () {
-                $.ajax({
+                document.location.href = "/students/${student.id}/deletescore/" + this.getAttribute('data-id') + "/";
+
+               /* $.ajax({
                     url: '/students/'+${student.id},
                     type: 'DELETE',
                     data: this.getAttribute('data-id'),
@@ -27,7 +29,9 @@
                         console.log(response);
                         document.location.reload();
                     }
-                });
+                });*/
+
+
             });
         });
     </script>

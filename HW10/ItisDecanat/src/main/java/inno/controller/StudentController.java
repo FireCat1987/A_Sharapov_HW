@@ -13,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Null;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -63,13 +64,26 @@ public class StudentController {
         return "/students/show";
     }
 
-    @RequestMapping(value = "/{student_id}", method = RequestMethod.DELETE)
-    public String deleteScore(@PathVariable("student_id") Integer studentId, ModelMap map, @RequestBody String scoreId) {
-        System.out.println("Delete score id " + Integer.parseInt(scoreId));
-        scoreRepository.remove(Integer.parseInt(scoreId));
-        return "forward:/students/"+studentId;
+    @RequestMapping(value = "/{student_id}/deletescore/{score_id}", method = RequestMethod.GET)
+    public String deleteScore(@PathVariable("student_id") Integer studentId, @PathVariable("score_id") Integer scoreId, ModelMap map) {
+        scoreRepository.remove(scoreId);
+        return "redirect:/students/"+studentId;
     }
 
+    /*@RequestMapping(value = "/{student_id}", method = RequestMethod.DELETE)
+    public String deleteScore(@PathVariable("student_id") Integer studentId, ModelMap map, @RequestBody String scoreId) {
+        System.out.println("Delete score id " + Integer.parseInt(scoreId));
+        if(!(scoreRepository.find(Integer.parseInt(scoreId)) == null)){
+            scoreRepository.remove(Integer.parseInt(scoreId));
+            return "redirect:/students/"+studentId;
+        }
+*//*        Student student = studentRepository.find(studentId);
+        student.setScores(scoreRepository.findByStudentId(studentId));
+        map.addAttribute("student", student);
+        map.addAttribute("subjects", SubjectType.values());*//*
+        return "/students/show";
+    }
+*/
     @RequestMapping(value = "/{student_id}", method = RequestMethod.POST)
     public String addScoreToStudent(@PathVariable("student_id") Integer studentId, ModelMap map, @ModelAttribute("score") @Valid Score score, BindingResult result) {
 
