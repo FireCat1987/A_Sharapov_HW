@@ -90,7 +90,7 @@
       <artifactId>hibernate-validator</artifactId>
       <version>${hibernate.version}</version>
     </dependency>
-    <dependency>
+    <!--<dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-aop</artifactId>
       <version>${spring.version}</version>
@@ -106,7 +106,7 @@
       <groupId>org.aspectj</groupId>
       <artifactId>aspectjweaver</artifactId>
       <version>1.7.4</version>
-    </dependency>
+    </dependency>-->
   </dependencies>
   <build>
     <finalName>ItisDecanat</finalName>

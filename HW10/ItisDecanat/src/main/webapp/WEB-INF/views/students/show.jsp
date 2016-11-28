@@ -35,8 +35,17 @@
             });
         });
     </script>
+    <style>
+        body {
+            background-color: #eceeef;
+        }
+    </style>
 </head>
 <body>
+<nav class="navbar navbar-light">
+    <a href="/students" class="btn btn-outline-danger float-lg-right">Список студентов</a>
+    <a href="/logout" class="btn btn-outline-danger float-lg-right">Выход</a>
+</nav>
     <div class="container">
 
 <h1>${student.firstname} ${student.surname} ${student.lastname}</h1>

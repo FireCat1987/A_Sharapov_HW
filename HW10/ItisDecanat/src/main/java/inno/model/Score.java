@@ -1,8 +1,10 @@
 package inno.model;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 
@@ -16,6 +18,7 @@ public class Score implements Serializable {
     private Integer id;
     @Column(name = "score")
     @Range(min = 1, max = 5, message = "Оценка должна входить в диапазон от 1 до 5!")
+    @NotNull(message = "Нужно выставить оценку")
     private Integer score;
 
     @Column(name = "subject_type")

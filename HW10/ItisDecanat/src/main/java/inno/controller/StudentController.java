@@ -4,21 +4,25 @@ package inno.controller;
 import inno.model.Score;
 import inno.model.Student;
 import inno.model.SubjectType;
+import inno.model.Users;
 import inno.repository.ScoreRepository;
 import inno.repository.StudentRepository;
+import inno.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.Null;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping("/students")
+@RequestMapping
 public class StudentController {
 
     @Autowired
@@ -27,7 +31,64 @@ public class StudentController {
     @Autowired
     ScoreRepository scoreRepository;
 
-    @RequestMapping
+    @Autowired
+    UsersRepository usersRepository;
+
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public String loginPage(ModelMap map){
+        map.addAttribute("users", new Users());
+        return "login";
+    }
+
+    @RequestMapping(value = "/registration", method = RequestMethod.GET)
+    public String registrationPage(ModelMap map){
+        map.addAttribute("users", new Users());
+        return "registration";
+    }
+
+    @RequestMapping(value = "/registration", method = RequestMethod.POST)
+    public String addUser(@ModelAttribute @Valid Users user, BindingResult result){
+        if (result.hasErrors()) {
+            return "registration";
+        }
+        if(usersRepository.add(user)){
+            return "redirect:/login";
+        } else {
+            ObjectError error = new ObjectError("login","Пользователь с таким login уже существует");
+            result.addError(error);
+            return "registration";
+        }
+
+    }
+
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    public String logoutPage(HttpServletRequest request){
+        request.getSession(false).invalidate();
+        return "redirect:/login";
+    }
+
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public String authorizeUser(@ModelAttribute @Valid Users user, BindingResult result, HttpServletRequest request){
+        String ref = null;
+        if(request.getHeader("referer").split("=").length > 1){
+            ref = request.getHeader("referer").split("=")[1];
+        }
+        if (result.hasErrors()) {
+            return "login";
+        }
+        System.out.println(user.getLogin());
+        Users loginUser = usersRepository.findByLogin(user.getLogin());
+        System.out.println(loginUser);
+        if(loginUser != null && loginUser.getPassword().equals(user.getPassword())) {
+            request.getSession(true).setAttribute("user", user);
+            return "redirect:"+(ref == null ? "/students" : ref);
+        }
+        ObjectError error = new ObjectError("login","Не найден пользователь с таким login");
+        result.addError(error);
+        return "login";
+    }
+
+    @RequestMapping("/students")
     public String getAllStudents(@RequestParam(value = "group", required = false) String group, ModelMap map) {
         List<Student> students = studentRepository.findAll();
         if (group != null) {
@@ -37,13 +98,13 @@ public class StudentController {
         return "students/index";
     }
 
-    @RequestMapping(value = "/add", method = RequestMethod.GET)
+    @RequestMapping(value = "/students/add", method = RequestMethod.GET)
     public String addNewStudentPage(ModelMap map) {
         map.addAttribute("student", new Student());
         return "students/add";
     }
 
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @RequestMapping(value = "/students/add", method = RequestMethod.POST)
     public String addNewStudent(@ModelAttribute @Valid Student student, BindingResult result) {
         if (result.hasErrors()) {
             return "students/add";
@@ -52,7 +113,7 @@ public class StudentController {
         return "redirect:/students";
     }
 
-    @RequestMapping(value = "/{student_id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/students/{student_id}", method = RequestMethod.GET)
     public String showStudent(@PathVariable("student_id") Integer studentId, ModelMap map) {
         Student student = studentRepository.find(studentId);
         student.setScores(scoreRepository.findByStudentId(studentId));
@@ -64,7 +125,7 @@ public class StudentController {
         return "/students/show";
     }
 
-    @RequestMapping(value = "/{student_id}/deletescore/{score_id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/students/{student_id}/deletescore/{score_id}", method = RequestMethod.GET)
     public String deleteScore(@PathVariable("student_id") Integer studentId, @PathVariable("score_id") Integer scoreId, ModelMap map) {
         scoreRepository.remove(scoreId);
         return "redirect:/students/"+studentId;
@@ -84,7 +145,7 @@ public class StudentController {
         return "/students/show";
     }
 */
-    @RequestMapping(value = "/{student_id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/students/{student_id}", method = RequestMethod.POST)
     public String addScoreToStudent(@PathVariable("student_id") Integer studentId, ModelMap map, @ModelAttribute("score") @Valid Score score, BindingResult result) {
 
         if (result.hasErrors()) {
@@ -100,20 +161,20 @@ public class StudentController {
         return "redirect:/students/"+studentId;
     }
 
-    @RequestMapping(value = "/{id}/delete", method = RequestMethod.GET)
+    @RequestMapping(value = "/students/{id}/delete", method = RequestMethod.GET)
     public String deleteStudent(@PathVariable("id") Integer id, ModelMap map) {
         studentRepository.remove(id);
         return "redirect:/students";
     }
 
-    @RequestMapping(value = "/{id}/edit", method = RequestMethod.GET)
+    @RequestMapping(value = "/students/{id}/edit", method = RequestMethod.GET)
     public String editStudent(@PathVariable("id") Integer id, ModelMap map) {
         Student student = studentRepository.find(id);
         map.addAttribute("student", student);
         return "students/edit";
     }
 
-    @RequestMapping(value = "/{id}/save", method = RequestMethod.POST)
+    @RequestMapping(value = "/students/{id}/save", method = RequestMethod.POST)
     public String saveStudent(@ModelAttribute @Valid Student student, BindingResult result) {
         if (result.hasErrors()) {
             return "students/edit";

@@ -13,9 +13,19 @@
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.3.6/css/bootstrap-colorpicker.css"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.3.6/js/bootstrap-colorpicker.min.js"></script>
+    <style>
+        body {
+            background-color: #eceeef;
+        }
+    </style>
 </head>
 <body>
+<nav class="navbar navbar-light">
+    <a href="/students" class="btn btn-outline-danger float-lg-right">Список студентов</a>
+    <a href="/logout" class="btn btn-outline-danger float-lg-right">Выход</a>
+</nav>
 <div class="container">
+    <h2>Добавление студента</h2>
 <form:form action="/students/add" method="post" modelAttribute="student">
     <table>
         <tr>

@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -17,37 +18,42 @@
         body {
             background-color: #eceeef;
         }
+        .form-signin {
+            max-width: 530px;
+            padding: 15px;
+            margin: 0 auto;
+        }
+        .form-signin .form-signin-heading{
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
 <nav class="navbar navbar-light">
-    <c:if test='<%= session.getAttribute("user") != null %>'>
-        <a href="/logout" class="btn btn-outline-danger float-lg-right">Выход</a>
-    </c:if>
-
+    <a href="/students" class="btn btn-outline-danger float-lg-right">Список студентов</a>
+    <a href="/registration" class="btn btn-outline-danger float-lg-right">Регистрация</a>
 </nav>
 <div class="container">
-<h2>Управление студентами итис!</h2>
 
-<form action="/students" method="get">
-    <input type="text" name="group" placeholder="введите номер группы..." width="600px">
-    <input type="submit" value="Search">
-</form>
+    <form:form action="/login" method="post" modelAttribute="users" cssClass="form-signin">
+        <h2 class="form-signin-heading">Введите логин и пароль!</h2>
 
-<a href="/students/add">Добавить нового студента</a>
+        <table>
+            <tr>
+                <td><form:label path="login">Логин</form:label></td>
+                <td><form:input path="login"/></td>
+                <td><form:errors path="login"/></td>
+            </tr>
+            <tr>
+                <td><form:label path="password">Пароль</form:label></td>
+                <td><form:password path="password" /></td>
+                <td><form:errors path="password"/></td>
+            </tr>
 
-<c:if test="${students.size() == 0}">
-    <p>Пока ничего нету</p>
-</c:if>
+        </table>
+        <input type="submit" value="save"/>
+    </form:form>
 
-<c:forEach var="student" items="${students}">
-    <h3>${student.firstname} ${student.surname} ${student.lastname}</h3>
-    <p>Группа:${student.studgroup}</p>
-    <a href="/students/${student.id}">Смотреть оценки студента...</a><br>
-    <a href="/students/${student.id}/delete">Удалить студента</a>
-    <a href="/students/${student.id}/edit">Редактировать студента</a>
-    <hr>
-</c:forEach>
 </div>
 </body>
 </html>

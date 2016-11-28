@@ -21,6 +21,7 @@
 
 
     <import resource="persistence-config.xml"/>
+    <!--<import resource="aop-config.xml"/>-->
 <!--    <mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
