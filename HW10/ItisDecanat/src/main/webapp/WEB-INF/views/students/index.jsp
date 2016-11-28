@@ -24,7 +24,9 @@
     <c:if test='<%= session.getAttribute("user") != null %>'>
         <a href="/logout" class="btn btn-outline-danger float-lg-right">Выход</a>
     </c:if>
-
+    <c:if test='<%= session.getAttribute("user") == null %>'>
+        <a href="/login" class="btn btn-outline-danger float-lg-right">Вход</a>
+    </c:if>
 </nav>
 <div class="container">
 <h2>Управление студентами итис!</h2>
