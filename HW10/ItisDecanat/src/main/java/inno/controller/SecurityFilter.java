@@ -1,13 +1,12 @@
 package inno.controller;
 
 import javax.servlet.*;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-@WebFilter(value = "/students/*")
+/*@WebFilter(value = "/students*//*")*/
 public class SecurityFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -22,10 +21,8 @@ public class SecurityFilter implements Filter {
         String loginURI = request.getContextPath() + "/login";
         boolean loggedIn = session != null && session.getAttribute("user") != null;
         boolean loginRequest = request.getRequestURI().equals(loginURI);
-        System.out.println("Filter run " + loggedIn + "/" + loginRequest + " (" + request.getRequestURI() + ")" + " (" + request.getServletPath() + ")" + " (" + request.getContextPath() + ")");
 
         if (request.getRequestURI().equals("/students")) {
-            System.out.println("no secure");
             chain.doFilter(request, response);
         }
         if (request.getServletPath().equals("/logout") && loggedIn) {
@@ -35,7 +32,6 @@ public class SecurityFilter implements Filter {
             if (loggedIn || loginRequest) {
                 chain.doFilter(request, response);
             } else {
-
                 response.sendRedirect(loginURI+"?redirectUrl=" + request.getRequestURI());
             }
         }

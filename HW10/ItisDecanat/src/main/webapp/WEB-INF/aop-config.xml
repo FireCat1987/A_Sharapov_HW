@@ -2,20 +2,23 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+<!--
     <bean id="controller-aspect" class="inno.aop.ControllerAspect"/>
-
+-->
+    <bean id="controller-aspect-ex" class="inno.aop.ControllerAspectException"/>
     <aop:config>
 
-        <aop:pointcut id="test-poincut" expression="execution(* inno.controller.*.*(..))
-        and !execution(* inno.controller.PostController.getAllPosts(..))"/>
-
-        <aop:aspect ref="controller-aspect">
-            <!--<aop:before method="controllerAction" pointcut-ref="test-poincut"/>-->
-            <aop:around method="aroundController" pointcut-ref="test-poincut"/>
-
-            <aop:after method="onRemovePost" pointcut="@annotation(inno.aop.MyAnnotation)"/>
-
-            <aop:before method="printId" pointcut="execution(* inno.controller.PostController.deletePost(Long)) and args(id)" arg-names="id" />
+        <aop:pointcut id="test-poincut" expression="execution(* inno.controller.StudentController.*(..))
+        and !execution(* inno.controller.StudentController.loginPage(..))
+        and !execution(* inno.controller.StudentController.registrationPage(..))
+        and !execution(* inno.controller.StudentController.logoutPage(..))
+        and !execution(* inno.controller.StudentController.getAllStudents(..))
+        and !execution(* inno.controller.StudentController.authorizeUser(..))"/>
+        <aop:aspect ref="controller-aspect-ex">
+            <aop:around method="authentificateSession" pointcut-ref="test-poincut"/>
         </aop:aspect>
+<!--        <aop:aspect ref="controller-aspect">
+            <aop:around method="authentificateSession" pointcut-ref="test-poincut"/>
+        </aop:aspect>-->
     </aop:config>
 </beans>
