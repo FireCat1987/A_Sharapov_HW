@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -14,6 +15,7 @@
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.3.6/css/bootstrap-colorpicker.css"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.3.6/js/bootstrap-colorpicker.min.js"></script>
+    <script src="${pageContext.request.contextPath}/resources/js/main.js"></script>
     <style>
         body {
             background-color: #eceeef;
@@ -21,7 +23,14 @@
     </style>
 </head>
 <body>
-
+<nav class="navbar navbar-light">
+    <c:if test='<%= session.getAttribute("user") != null %>'>
+        <a href="/logout" class="btn btn-outline-danger float-lg-right">Выход</a>
+    </c:if>
+    <c:if test='<%= session.getAttribute("user") == null %>'>
+        <a href="/login" class="btn btn-outline-danger float-lg-right">Вход</a>
+    </c:if>
+</nav>
 <div class="container">
     <div class="jumbotron jumbotron-fluid">
         <div class="container">
