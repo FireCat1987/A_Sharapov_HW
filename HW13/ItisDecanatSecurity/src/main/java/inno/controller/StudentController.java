@@ -9,17 +9,14 @@ import inno.repository.ScoreRepository;
 import inno.repository.StudentRepository;
 import inno.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
-import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.sql.SQLDataException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,6 +32,11 @@ public class StudentController {
 
     @Autowired
     UsersRepository usersRepository;
+
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public String indexPage(ModelMap map){
+        return "index";
+    }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String loginPage(ModelMap map){
