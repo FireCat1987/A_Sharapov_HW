@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 public class ControllerAspectException {
-    public void authentificateSession() throws LoginException {
+    public void authentificateSession() throws CustomLoginException {
         ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         HttpServletRequest request = attr.getRequest();
         HttpSession session = attr.getRequest().getSession(true);
@@ -16,10 +16,10 @@ public class ControllerAspectException {
         boolean loggedIn = session != null && session.getAttribute("user") != null;
         if (request.getServletPath().equals("/logout") && loggedIn) {
             session.invalidate();
-            throw new LoginException("1");
+            throw new CustomLoginException("");
         } else {
             if (!(loggedIn || loginRequest)) {
-                throw new LoginException("2");
+                throw new CustomLoginException(request.getRequestURI());
             }
         }
     }
@@ -27,9 +27,4 @@ public class ControllerAspectException {
 
 }
 
-class LoginException extends RuntimeException {
-    LoginException(String message) {
-        super(message);
-    }
-}
 
