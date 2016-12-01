@@ -6,16 +6,12 @@
 
     <security:http auto-config="true" use-expressions="true">
         <security:intercept-url pattern="/login.jsp*" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+
         <security:form-login login-page="/login"
-                    authentication-failure-url="/students" default-target-url="/" />
+                    authentication-failure-url="/students" default-target-url="/students" />
         <security:intercept-url pattern="/students/*" access="hasRole('ROLE_USER')"/>
-        <security:intercept-url pattern="/students/add" access="hasRole('ROLE_USER')"/>
-        <security:intercept-url pattern="/students/*/deletescore/*" access="hasRole('ROLE_USER')"/>
-        <security:intercept-url pattern="/students/*/delete" access="hasRole('ROLE_USER')"/>
-        <security:intercept-url pattern="/students/add" access="hasRole('ROLE_USER')"/>
-        <security:intercept-url pattern="/students/*/save" access="hasRole('ROLE_USER')"/>
-        <security:intercept-url pattern="/students/*/edit" access="hasRole('ROLE_USER')"/>
-        <security:logout logout-url="/logout"/>
+
+        <security:logout logout-url="/logout" logout-success-url="/students"/>
     </security:http>
 
     <security:authentication-manager>

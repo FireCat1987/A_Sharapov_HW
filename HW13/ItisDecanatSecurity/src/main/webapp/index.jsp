@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -26,20 +27,15 @@
 </head>
 <body>
 <nav class="navbar navbar-light">
-    <sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
-        <a href="/login" class="btn btn-outline-danger float-lg-right">Вход</a>
-    </sec:authorize>
-    <sec:authorize ifNotGranted="ROLE_ANONYMOUS">
-        <a href="/logout" class="btn btn-outline-danger float-lg-right">Выход</a>
-    </sec:authorize>
+
 </nav>
 <div class="container">
     <div class="jumbotron jumbotron-fluid">
         <div class="container">
-            <%--<h1 class="display-3">Управление студентами итис!</h1>--%>
+            <h1 class="display-3">Управление студентами итис!</h1>
             <p class="lead">Здесь вы можете увидеть список всех студентов с возможностью добавления и удаления студентам оценок.</p>
             <p class="lead">
-                <a class="btn btn-primary btn-lg" href="/students" role="button">К списку стеднтов.</a>
+                <a class="btn btn-primary btn-lg" href="/students" role="button">К списку студентов.</a>
             </p>
         </div>
     </div>
