@@ -4,6 +4,9 @@
 <html>
 <head>
     <title>${student.id}</title>
+    <meta name="_csrf" content="${_csrf.token}"/>
+    <!-- default header name is X-CSRF-TOKEN -->
+    <meta name="_csrf_header" content="${_csrf.headerName}"/>
     <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/tether/1.2.0/tether.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css"
@@ -18,9 +21,9 @@
     <script>
         $(document).ready(function () {
             $('button.delete').click(function () {
-                document.location.href = "/students/${student.id}/deletescore/" + this.getAttribute('data-id') + "/";
+                /*document.location.href = "/students/${student.id}/deletescore/" + this.getAttribute('data-id') + "/";*/
 
-               /* $.ajax({
+               $.ajax({
                     url: '/students/'+${student.id},
                     type: 'DELETE',
                     data: this.getAttribute('data-id'),
@@ -29,7 +32,7 @@
                         console.log(response);
                         document.location.reload();
                     }
-                });*/
+                });
 
 
             });
@@ -111,6 +114,8 @@
 
 
 <a href="/students">Вернуться на главную</a>
+
+        <p>${error}</p>
 </div>
 </body>
 </html>

@@ -2,7 +2,7 @@ package inno.repository;
 
 import inno.model.Users;
 
-public interface UsersRepository {
+public interface UsersRepository{
 
     Users findById(Integer id);
 

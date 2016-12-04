@@ -4,6 +4,9 @@
 <html>
 <head>
     <title>Деканат итис</title>
+    <meta name="_csrf" content="${_csrf.token}"/>
+    <!-- default header name is X-CSRF-TOKEN -->
+    <meta name="_csrf_header" content="${_csrf.headerName}"/>
     <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/tether/1.2.0/tether.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css"
@@ -24,10 +27,10 @@
 <nav class="navbar navbar-light">
 
 
-    <sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
+    <sec:authorize access="!isAuthenticated()">
         <a href="/login" class="btn btn-outline-danger float-lg-right">Вход</a>
     </sec:authorize>
-    <sec:authorize ifNotGranted="ROLE_ANONYMOUS">
+    <sec:authorize access="isAuthenticated()">
         <a href="/logout" class="btn btn-outline-danger float-lg-right">Выход</a>
     </sec:authorize>
 </nav>

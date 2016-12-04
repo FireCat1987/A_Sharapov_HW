@@ -14,10 +14,10 @@ public class Users implements Serializable {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "login",unique = true)
+    @Column(name = "login",unique = true, nullable = false)
     @NotEmpty(message = "Логин не может быть пустым")
     private String login;
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     @NotEmpty(message = "Пароль не может быть пустым")
     private String password;
 

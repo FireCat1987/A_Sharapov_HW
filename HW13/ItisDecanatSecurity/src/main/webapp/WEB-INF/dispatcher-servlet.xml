@@ -7,6 +7,8 @@
 
     <context:component-scan base-package="inno.controller"/>
     <context:component-scan base-package="inno.repository"/>
+    <context:component-scan base-package="inno.service"/>
+    <context:component-scan base-package="inno.utils"/>
 
 
     <mvc:annotation-driven/>

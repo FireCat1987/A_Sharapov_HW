@@ -33,7 +33,7 @@
     <a href="/login" class="btn btn-outline-danger float-lg-right">Вход</a>
 </nav>
 <div class="container">
-    <form:form action="/registration" method="post" modelAttribute="users" cssClass="form-signin">
+    <form:form action="/registration" method="post" modelAttribute="userForm" cssClass="form-signin">
         <h2 class="form-signin-heading">Введите логин и пароль для регистрации!</h2>
 
         <table>
@@ -47,7 +47,11 @@
                 <td><form:password path="password" /></td>
                 <td><form:errors path="password"/></td>
             </tr>
-
+            <tr>
+                <td><form:label path="repassword">Повтор пароля</form:label></td>
+                <td><form:password path="repassword" /></td>
+                <td><form:errors path="repassword"/></td>
+            </tr>
         </table>
         <input type="submit" value="save"/>
     </form:form>
