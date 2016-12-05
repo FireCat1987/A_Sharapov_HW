@@ -1,13 +1,10 @@
 package inno.model;
 
-import org.hibernate.annotations.OnDelete;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
-
-import static org.hibernate.annotations.OnDeleteAction.CASCADE;
 
 @Entity
 @Table(name = "student")
@@ -33,7 +30,9 @@ public class Student implements Serializable {
     private String studgroup;
     @OneToMany(targetEntity = Score.class, mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Score> scores;
-
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private Users user;
     public Student() {
     }
 
@@ -91,4 +90,13 @@ public class Student implements Serializable {
     public void setScores(List<Score> scores) {
         this.scores = scores;
     }
+
+    public Users getUser() {
+        return user;
+    }
+
+    public void setUser(Users user) {
+        this.user = user;
+    }
+
 }

@@ -4,6 +4,8 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -14,12 +16,22 @@ public class Users implements Serializable {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "login",unique = true, nullable = false)
+    @Column(name = "login", unique = true, nullable = false)
     @NotEmpty(message = "Логин не может быть пустым")
     private String login;
     @Column(name = "password", nullable = false)
     @NotEmpty(message = "Пароль не может быть пустым")
     private String password;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Student> students;
+
+    @ManyToMany
+    @JoinTable(name = "users_roles", joinColumns = {
+            @JoinColumn(name = "user_id", nullable = false)},
+            inverseJoinColumns = {@JoinColumn(name = "role_id",
+                    nullable = false)})
+    private Set<Role> roles;
 
     public Users() {
     }
@@ -52,4 +64,22 @@ public class Users implements Serializable {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public List<Student> getStudents() {
+        return students;
+    }
+
+    public void setStudents(List<Student> students) {
+        this.students = students;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+
 }

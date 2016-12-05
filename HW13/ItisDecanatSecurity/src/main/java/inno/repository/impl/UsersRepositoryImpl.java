@@ -10,12 +10,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
-
+/*
 @Repository
-@Transactional
-public class UsersRepositoryImpl implements UsersRepository {
+@Transactional*/
+public class UsersRepositoryImpl/* implements UsersRepository*/ {
 
-    @PersistenceContext
+   /* @PersistenceContext
     private
     EntityManager em;
 
@@ -53,9 +53,9 @@ public class UsersRepositoryImpl implements UsersRepository {
 
     @Override
     public boolean remove(Integer id) {
-/*        Student student = em.find(Student.class, id);
-        em.remove(student);*/
+*//*        Student student = em.find(Student.class, id);
+        em.remove(student);*//*
         em.remove(em.find(Users.class, id));
         return true;
-    }
+    }*/
 }

@@ -10,11 +10,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
-@Repository
-@Transactional
-public class ScoreRepositoryImpl implements ScoreRepository {
+/*@Repository
+@Transactional*/
+public class ScoreRepositoryImpl /*implements ScoreRepository*/ {
 
-    @PersistenceContext
+   /* @PersistenceContext
     private
     EntityManager em;
 
@@ -47,5 +47,5 @@ public class ScoreRepositoryImpl implements ScoreRepository {
                 "SELECT score from Score score WHERE score.student.id = :studentId", Score.class);
         query.setParameter("studentId", studentId);
         return query.getResultList();
-    }
+    }*/
 }

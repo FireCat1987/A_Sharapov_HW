@@ -22,15 +22,15 @@
     </security:http>
 
     <security:authentication-manager>
-        <security:authentication-provider>
+       <!-- <security:authentication-provider>
             <security:jdbc-user-service data-source-ref="dataSource"
                                         users-by-username-query="SELECT login, password, TRUE FROM users WHERE login = ?"
                                         authorities-by-username-query="SELECT login, 'ROLE_USER' FROM users WHERE login = ?"/>
             <security:password-encoder ref="bCryptPasswordEncoder"/>
-        </security:authentication-provider>
-
+        </security:authentication-provider>-->
+        <security:authentication-provider ref="authProvider"/>
     </security:authentication-manager>
-
+    <bean id="authProvider" class="inno.security.AuthProviderImpl"/>
     <bean id="bCryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
     <bean id="savedRequestAwareAuthenticationSuccessHandler"
           class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">

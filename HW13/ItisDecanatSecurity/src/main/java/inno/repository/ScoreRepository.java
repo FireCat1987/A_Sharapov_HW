@@ -1,17 +1,8 @@
 package inno.repository;
 
 import inno.model.Score;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+public interface ScoreRepository extends JpaRepository<Score, Integer> {
 
-public interface ScoreRepository {
-    List<Score> findAll();
-
-    Score find(Integer id);
-
-    boolean add(Score score);
-
-    boolean remove(Integer id);
-
-    List<Score> findByStudentId(Integer studentId);
 }

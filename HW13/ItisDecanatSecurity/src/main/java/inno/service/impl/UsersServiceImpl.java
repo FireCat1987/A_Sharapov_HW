@@ -1,6 +1,8 @@
 package inno.service.impl;
 
+import inno.model.Role;
 import inno.model.Users;
+import inno.repository.RoleRepository;
 import inno.repository.UsersRepository;
 import inno.service.UsersService;
 import inno.utils.form.UserForm;
@@ -16,9 +18,9 @@ import javax.annotation.PostConstruct;
 public class UsersServiceImpl implements UsersService {
 
     private static final String DEFAULT_ROLE_NAME = "ROLE_USER";
-/*    private Role defaultRole;
+    private Role defaultRole;
     @Autowired
-    RoleRepository roleRepository;*/
+    RoleRepository roleRepository;
 
     @Autowired
     UsersRepository usersRepository;
@@ -28,14 +30,14 @@ public class UsersServiceImpl implements UsersService {
 
     @PostConstruct
     private void initialize() {
-       /* defaultRole = roleRepository.findByName(DEFAULT_ROLE_NAME);*/
+        defaultRole = roleRepository.findByName(DEFAULT_ROLE_NAME);
     }
 
     @Transactional
     @Override
     public void saveUser(UserForm form) {
         Users user = transformer.toUser(form);
-     /*   user.getRoles().add(defaultRole);*/
-        usersRepository.add(user);
+        user.getRoles().add(defaultRole);
+        usersRepository.save(user);
     }
 }

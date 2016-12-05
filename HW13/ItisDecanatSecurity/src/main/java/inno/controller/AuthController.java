@@ -23,8 +23,6 @@ import javax.validation.Valid;
 public class AuthController {
 
     @Autowired
-    UsersRepository usersRepository;
-    @Autowired
     UsersService usersService;
     @Autowired
     UserValidator userValidator;
@@ -60,7 +58,7 @@ public class AuthController {
         return "redirect:/login";
     }
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
+/*    @RequestMapping(value = "/login", method = RequestMethod.POST)
     public String authorizeUser(@ModelAttribute @Valid Users user, BindingResult result, HttpServletRequest request){
         String ref = null;
         if(request.getHeader("referer").split("=").length > 1){
@@ -79,5 +77,5 @@ public class AuthController {
         ObjectError error = new ObjectError("login","Не найден пользователь с таким login");
         result.addError(error);
         return "login";
-    }
+    }*/
 }

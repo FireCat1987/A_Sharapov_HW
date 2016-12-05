@@ -36,7 +36,10 @@
 </nav>
 <div class="container">
     <c:if test="${error != null}">
-        <p>Вы что-то ввели не так!</p>
+        <div class="alert alert-danger" role="alert">
+            <p>Вы что-то ввели не так!</p>
+        </div>
+
     </c:if>
 <%--    <form class="login-form" action="j_spring_security_check" method="post">
         <label for="j_username">Username: </label>

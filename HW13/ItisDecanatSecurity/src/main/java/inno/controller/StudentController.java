@@ -4,10 +4,15 @@ package inno.controller;
 import inno.model.Score;
 import inno.model.Student;
 import inno.model.SubjectType;
+import inno.model.Users;
 import inno.repository.ScoreRepository;
 import inno.repository.StudentRepository;
 import inno.repository.UsersRepository;
+import inno.security.SecurityUtils;
+import inno.service.StudentService;
+import inno.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -22,6 +27,9 @@ import java.util.stream.Collectors;
 public class StudentController {
 
     @Autowired
+    StudentService studentService;
+
+    @Autowired
     StudentRepository studentRepository;
 
     @Autowired
@@ -29,6 +37,9 @@ public class StudentController {
 
     @Autowired
     UsersRepository usersRepository;
+
+    @Autowired
+    UsersService usersService;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String indexPage(ModelMap map){
@@ -58,14 +69,14 @@ public class StudentController {
         if (result.hasErrors()) {
             return "students/add";
         }
-        studentRepository.add(student);
+        studentService.saveStudent(student);
         return "redirect:/students";
     }
 
     @RequestMapping(value = "/students/{student_id}", method = RequestMethod.GET)
     public String showStudent(@PathVariable("student_id") Integer studentId, ModelMap map) {
-        Student student = studentRepository.find(studentId);
-        student.setScores(scoreRepository.findByStudentId(studentId));
+        Student student = studentRepository.findOne(studentId);
+        student.setScores(studentRepository.findScoresByStudent(student));
         map.addAttribute("sumScore",student.getScores().stream().mapToInt(Score::getScore).sum());
         map.addAttribute("avgScore",student.getScores().stream().mapToInt(Score::getScore).average().orElse(0.0));
         map.addAttribute("student", student);
@@ -81,45 +92,40 @@ public class StudentController {
     }*/
 
     @RequestMapping(value = "/students/{student_id}", method = RequestMethod.DELETE)
-    public String deleteScore(@PathVariable("student_id") Integer studentId, ModelMap map, @RequestBody String scoreId) {
-        System.out.println("Delete score id " + Integer.parseInt(scoreId));
-        if(!(scoreRepository.find(Integer.parseInt(scoreId)) == null)){
-            scoreRepository.remove(Integer.parseInt(scoreId));
-            return "redirect:/students/"+studentId;
+    public String deleteScore(@PathVariable("student_id") Integer studentId, ModelMap map, @RequestBody Integer scoreId) {
+        Score score = scoreRepository.findOne(scoreId);
+        if (!userCanEditStudent(score.getStudent())) {
+            throw new AccessDeniedException("Acces denied");
         }
-        Student student = studentRepository.find(studentId);
-        student.setScores(scoreRepository.findByStudentId(studentId));
-        map.addAttribute("student", student);
-        map.addAttribute("subjects", SubjectType.values());
-        map.addAttribute("error", "Отсутствует параметр ScoreId");
-        return "/students/show";
+        scoreRepository.delete(score);
+        return "redirect:/students/"+studentId;
     }
 
     @RequestMapping(value = "/students/{student_id}", method = RequestMethod.POST)
     public String addScoreToStudent(@PathVariable("student_id") Integer studentId, ModelMap map, @ModelAttribute("score") @Valid Score score, BindingResult result) {
-
         if (result.hasErrors()) {
-            Student student = studentRepository.find(studentId);
-            student.setScores(scoreRepository.findByStudentId(studentId));
-            map.addAttribute("student", student);
-            map.addAttribute("subjects", SubjectType.values());
-            return "/students/show";
+             return "/students/show";
         }
-        Student student = studentRepository.find(studentId);
-        score.setStudent(student);
-        scoreRepository.add(score);
+        scoreRepository.save(score);
         return "redirect:/students/"+studentId;
     }
 
     @RequestMapping(value = "/students/{id}/delete", method = RequestMethod.GET)
     public String deleteStudent(@PathVariable("id") Integer id, ModelMap map) {
-        studentRepository.remove(id);
+        Student student = studentRepository.findOne(id);
+        if (!userCanEditStudent(student)) {
+            throw new AccessDeniedException("Acces denied");
+        }
+        studentRepository.delete(student);
         return "redirect:/students";
     }
 
     @RequestMapping(value = "/students/{id}/edit", method = RequestMethod.GET)
     public String editStudent(@PathVariable("id") Integer id, ModelMap map) {
-        Student student = studentRepository.find(id);
+        Student student = studentRepository.findOne(id);
+        if (!userCanEditStudent(student)) {
+            throw new AccessDeniedException("Acces denied");
+        }
         map.addAttribute("student", student);
         return "students/edit";
     }
@@ -129,8 +135,11 @@ public class StudentController {
         if (result.hasErrors()) {
             return "students/edit";
         }
-        studentRepository.update(student);
+        studentService.saveStudent(student);
         return "redirect:/students";
     }
-
+    private boolean userCanEditStudent(Student student) {
+        Users currentUser = SecurityUtils.getCurrentUser();
+        return currentUser != null && student.getUser().getId().equals(currentUser.getId());
+    }
 }

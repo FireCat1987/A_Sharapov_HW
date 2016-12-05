@@ -11,12 +11,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
-
+/*
 @Repository
-@Transactional
-public class StudentRepositoryImpl implements StudentRepository {
+@Transactional*/
+public class StudentRepositoryImpl /*implements StudentRepository */{
 
-    @PersistenceContext
+    /*@PersistenceContext
     private
     EntityManager em;
 
@@ -55,7 +55,7 @@ public class StudentRepositoryImpl implements StudentRepository {
         query.setParameter("studentId", id);
         student.setScores(query.getResultList());
         em.remove(student);
-       /* em.remove(em.find(Student.class, id));*/
+       *//* em.remove(em.find(Student.class, id));*//*
         return true;
     }
 
@@ -65,5 +65,5 @@ public class StudentRepositoryImpl implements StudentRepository {
                 "SELECT student from Student student WHERE student.studgroup LIKE :studgroup", Student.class);
         query.setParameter("studgroup", studgroup);
         return query.getResultList();
-    }
+    }*/
 }
