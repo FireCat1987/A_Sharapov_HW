@@ -7,12 +7,12 @@ import java.io.Serializable;
 import java.util.List;
 
 @Entity
-@Table(name = "student")
-@SequenceGenerator(sequenceName = "student_seq", name = "studentSequence")
+@Table(name = "students")
+@SequenceGenerator(sequenceName = "students_seq", name = "studentsSequence")
 public class Student implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "studentSequence")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "studentsSequence")
     @Column(name = "id")
     private Integer id;
 
@@ -32,7 +32,7 @@ public class Student implements Serializable {
     private List<Score> scores;
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private Users user;
+    private User user;
     public Student() {
     }
 
@@ -91,11 +91,11 @@ public class Student implements Serializable {
         this.scores = scores;
     }
 
-    public Users getUser() {
+    public User getUser() {
         return user;
     }
 
-    public void setUser(Users user) {
+    public void setUser(User user) {
         this.user = user;
     }
 

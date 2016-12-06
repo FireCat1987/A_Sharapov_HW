@@ -1,7 +1,7 @@
 package inno.security;
 
 import inno.model.Role;
-import inno.model.Users;
+import inno.model.User;
 import inno.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -28,7 +28,7 @@ public class AuthProviderImpl implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String login = authentication.getName();
-        Users user = repository.findByLogin(login);
+        User user = repository.findByLogin(login);
         if (user == null) {
             throw new UsernameNotFoundException("User not found!");
         }

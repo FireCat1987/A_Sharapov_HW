@@ -1,6 +1,7 @@
 package inno.model;
 
 public enum  SubjectType {
+    OTHER("Общая наука"),
     ECONOMY("Экономика"),
     SCIENCE("Наука"),
     POLITICS("Политика");

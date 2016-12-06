@@ -1,7 +1,7 @@
 package inno.service.impl;
 
 import inno.model.Student;
-import inno.model.Users;
+import inno.model.User;
 import inno.repository.StudentRepository;
 import inno.security.SecurityUtils;
 import inno.service.StudentService;
@@ -19,7 +19,7 @@ public class StudentServiceImpl implements StudentService {
     @Transactional
     @Override
     public void saveStudent(Student student) {
-        Users user = SecurityUtils.getCurrentUser();
+        User user = SecurityUtils.getCurrentUser();
         student.setUser(user);
         // TODO использовать PostForm
         repository.save(student);

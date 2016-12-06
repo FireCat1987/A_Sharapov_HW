@@ -1,15 +1,5 @@
 package inno.repository.impl;
 
-import inno.model.Student;
-import inno.model.Users;
-import inno.repository.UsersRepository;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import java.util.List;
 /*
 @Repository
 @Transactional*/
@@ -20,16 +10,16 @@ public class UsersRepositoryImpl/* implements UsersRepository*/ {
     EntityManager em;
 
     @Override
-    public Users findById(Integer id) {
-        return em.find(Users.class, id);
+    public User findById(Integer id) {
+        return em.find(User.class, id);
     }
 
     @Override
-    public Users findByLogin(String login){
-        TypedQuery<Users> query = em.createQuery(
-                "SELECT usr from Users usr WHERE usr.login = :login", Users.class);
+    public User findByLogin(String login){
+        TypedQuery<User> query = em.createQuery(
+                "SELECT usr from User usr WHERE usr.login = :login", User.class);
         query.setParameter("login", login);
-        List<Users> results = query.getResultList();
+        List<User> results = query.getResultList();
         if (results.isEmpty()) {
             return null;
         } else {
@@ -38,7 +28,7 @@ public class UsersRepositoryImpl/* implements UsersRepository*/ {
     }
 
     @Override
-    public boolean add(Users users) {
+    public boolean add(User users) {
         if(findByLogin(users.getLogin()) != null){
             return false;
         }
@@ -47,7 +37,7 @@ public class UsersRepositoryImpl/* implements UsersRepository*/ {
     }
 
     @Override
-    public void update(Users users) {
+    public void update(User users) {
         em.merge(users);
     }
 
@@ -55,7 +45,7 @@ public class UsersRepositoryImpl/* implements UsersRepository*/ {
     public boolean remove(Integer id) {
 *//*        Student student = em.find(Student.class, id);
         em.remove(student);*//*
-        em.remove(em.find(Users.class, id));
+        em.remove(em.find(User.class, id));
         return true;
     }*/
 }

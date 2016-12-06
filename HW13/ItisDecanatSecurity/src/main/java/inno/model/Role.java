@@ -1,19 +1,20 @@
 package inno.model;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
-@Table(name = "role")
-@SequenceGenerator(sequenceName = "roles_seq", name = "roleSequence")
-public class Role {
+@Table(name = "roles")
+@SequenceGenerator(sequenceName = "roles_seq", name = "rolesSequence")
+public class Role implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "roleSequence")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "rolesSequence")
     private Long id;
 
     @ManyToMany(mappedBy = "roles")
-    private List<Users> users;
+    private List<User> users;
 
     @Column(unique = true, nullable = false)
     private String name;
@@ -26,11 +27,11 @@ public class Role {
         this.id = id;
     }
 
-    public List<Users> getUsers() {
+    public List<User> getUsers() {
         return users;
     }
 
-    public void setUsers(List<Users> users) {
+    public void setUsers(List<User> users) {
         this.users = users;
     }
 

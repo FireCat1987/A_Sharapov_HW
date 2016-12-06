@@ -1,7 +1,8 @@
 package inno.service.impl;
 
 import inno.model.Role;
-import inno.model.Users;
+import inno.model.SubjectType;
+import inno.model.User;
 import inno.repository.RoleRepository;
 import inno.repository.UsersRepository;
 import inno.service.UsersService;
@@ -19,6 +20,7 @@ public class UsersServiceImpl implements UsersService {
 
     private static final String DEFAULT_ROLE_NAME = "ROLE_USER";
     private Role defaultRole;
+    private SubjectType subject;
     @Autowired
     RoleRepository roleRepository;
 
@@ -31,13 +33,15 @@ public class UsersServiceImpl implements UsersService {
     @PostConstruct
     private void initialize() {
         defaultRole = roleRepository.findByName(DEFAULT_ROLE_NAME);
+        subject = SubjectType.OTHER;
     }
 
     @Transactional
     @Override
     public void saveUser(UserForm form) {
-        Users user = transformer.toUser(form);
+        User user = transformer.toUser(form);
         user.getRoles().add(defaultRole);
+        user.setSubject(subject);
         usersRepository.save(user);
     }
 }

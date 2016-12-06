@@ -9,11 +9,11 @@ import java.io.Serializable;
 
 
 @Entity
-@Table(name = "score")
-@SequenceGenerator(sequenceName = "score_seq", name = "scoreSequence")
+@Table(name = "scores")
+@SequenceGenerator(sequenceName = "scores_seq", name = "scoresSequence")
 public class Score implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "scoreSequence")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "scoresSequence")
     @Column(name = "id")
     private Integer id;
     @Column(name = "score")

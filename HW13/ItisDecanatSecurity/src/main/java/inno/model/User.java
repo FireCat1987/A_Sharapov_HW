@@ -4,13 +4,14 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "users")
 @SequenceGenerator(sequenceName = "users_seq", name = "usersSequence")
-public class Users implements Serializable {
+public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "usersSequence")
     @Column(name = "id")
@@ -23,6 +24,10 @@ public class Users implements Serializable {
     @NotEmpty(message = "Пароль не может быть пустым")
     private String password;
 
+    @Column(name = "subject")
+    @Enumerated(EnumType.ORDINAL)
+    private SubjectType subject;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Student> students;
 
@@ -33,10 +38,10 @@ public class Users implements Serializable {
                     nullable = false)})
     private Set<Role> roles;
 
-    public Users() {
+    public User() {
     }
 
-    public Users(String login, String password) {
+    public User(String login, String password) {
         this.login = login;
         this.password = password;
     }
@@ -74,6 +79,9 @@ public class Users implements Serializable {
     }
 
     public Set<Role> getRoles() {
+        if (roles == null) {
+            roles = new HashSet<>();
+        }
         return roles;
     }
 
@@ -81,5 +89,11 @@ public class Users implements Serializable {
         this.roles = roles;
     }
 
+    public SubjectType getSubject() {
+        return subject;
+    }
 
+    public void setSubject(SubjectType subject) {
+        this.subject = subject;
+    }
 }

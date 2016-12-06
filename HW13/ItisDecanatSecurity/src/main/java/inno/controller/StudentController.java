@@ -4,7 +4,7 @@ package inno.controller;
 import inno.model.Score;
 import inno.model.Student;
 import inno.model.SubjectType;
-import inno.model.Users;
+import inno.model.User;
 import inno.repository.ScoreRepository;
 import inno.repository.StudentRepository;
 import inno.repository.UsersRepository;
@@ -139,7 +139,7 @@ public class StudentController {
         return "redirect:/students";
     }
     private boolean userCanEditStudent(Student student) {
-        Users currentUser = SecurityUtils.getCurrentUser();
+        User currentUser = SecurityUtils.getCurrentUser();
         return currentUser != null && student.getUser().getId().equals(currentUser.getId());
     }
 }
