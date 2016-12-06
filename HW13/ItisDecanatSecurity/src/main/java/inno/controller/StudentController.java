@@ -69,6 +69,7 @@ public class StudentController {
         if (result.hasErrors()) {
             return "students/add";
         }
+
         studentService.saveStudent(student);
         return "redirect:/students";
     }

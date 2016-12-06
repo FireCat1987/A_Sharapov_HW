@@ -10,19 +10,21 @@ public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "roleSequence")
-    private Long id;
+    private Integer id;
 
     @ManyToMany(mappedBy = "roles")
     private List<Users> users;
 
+
+
     @Column(unique = true, nullable = false)
     private String name;
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
