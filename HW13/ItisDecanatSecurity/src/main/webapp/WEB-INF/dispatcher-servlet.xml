@@ -19,8 +19,17 @@
         <property name="prefix" value="/WEB-INF/views/"/>
         <property name="suffix" value=".jsp"/>
     </bean>
-
-
+    <bean id="messageSource"
+          class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basenames">
+            <list>
+                <value>messages</value>
+            </list>
+        </property>
+        <property name="useCodeAsDefaultMessage" value="true"/>
+        <property name="defaultEncoding" value="Windows-1251"/>
+        <property name="cacheSeconds" value="5"/>
+    </bean>
 
     <import resource="persistence-config.xml"/>
     <import resource="security-config.xml"/>
