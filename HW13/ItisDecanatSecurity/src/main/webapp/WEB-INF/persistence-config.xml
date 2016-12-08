@@ -7,8 +7,7 @@
 
     <bean class="org.springframework.data.web.config.SpringDataWebConfiguration" />
     <context:property-placeholder location="classpath:db.properties" ignore-unresolvable="true"/>
-    <jpa:repositories base-package="inno.repository" entity-manager-factory-ref="emf"/>
-
+    <jpa:repositories base-package="inno.repository"/>
     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
         <property name="driverClass" value="${jdbc.driver}"/>
         <property name="jdbcUrl" value="${jdbc.url}"/>
@@ -23,14 +22,14 @@
         <property name="databasePlatform" value="org.hibernate.dialect.PostgreSQL9Dialect"/>
     </bean>
 
-    <bean id="emf" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
         <property name="dataSource" ref="dataSource"/>
         <property name="jpaVendorAdapter" ref="jpaVendorAdapter"/>
         <property name="packagesToScan" value="inno.model"/>
     </bean>
 
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-        <property name="entityManagerFactory" ref="emf"/>
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
     </bean>
 
     <tx:annotation-driven transaction-manager="transactionManager"/>

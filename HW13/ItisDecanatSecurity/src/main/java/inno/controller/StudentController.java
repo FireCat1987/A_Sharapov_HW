@@ -86,13 +86,13 @@ public class StudentController {
         return "/students/show";
     }
 
-/*    @RequestMapping(value = "/students/{student_id}/deletescore/{score_id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/students/{student_id}/deletescore/{score_id}", method = RequestMethod.GET)
     public String deleteScore(@PathVariable("student_id") Integer studentId, @PathVariable("score_id") Integer scoreId, ModelMap map) {
-        scoreRepository.remove(scoreId);
+        scoreRepository.delete(scoreId);
         return "redirect:/students/"+studentId;
-    }*/
+    }
 
-    @RequestMapping(value = "/students/{student_id}", method = RequestMethod.DELETE)
+/*    @RequestMapping(value = "/students/{student_id}", method = RequestMethod.DELETE)
     public String deleteScore(@PathVariable("student_id") Integer studentId, ModelMap map, @RequestBody Integer scoreId) {
         Score score = scoreRepository.findOne(scoreId);
         if (!userCanEditStudent(score.getStudent())) {
@@ -100,13 +100,15 @@ public class StudentController {
         }
         scoreRepository.delete(score);
         return "redirect:/students/"+studentId;
-    }
+    }*/
 
     @RequestMapping(value = "/students/{student_id}", method = RequestMethod.POST)
     public String addScoreToStudent(@PathVariable("student_id") Integer studentId, ModelMap map, @ModelAttribute("score") @Valid Score score, BindingResult result) {
         if (result.hasErrors()) {
              return "/students/show";
         }
+        Student student = studentRepository.findOne(studentId);
+        score.setStudent(student);
         scoreRepository.save(score);
         return "redirect:/students/"+studentId;
     }

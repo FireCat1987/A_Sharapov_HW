@@ -11,7 +11,7 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 @SequenceGenerator(sequenceName = "users_seq", name = "usersSequence")
-public class User implements Serializable {
+public class Users implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "usersSequence")
     @Column(name = "id")
@@ -24,24 +24,20 @@ public class User implements Serializable {
     @NotEmpty(message = "Пароль не может быть пустым")
     private String password;
 
-    @Column(name = "subject")
-    @Enumerated(EnumType.ORDINAL)
-    private SubjectType subject;
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Student> students;
 
-    @ManyToMany
+    @ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(name = "users_roles", joinColumns = {
             @JoinColumn(name = "user_id", nullable = false)},
             inverseJoinColumns = {@JoinColumn(name = "role_id",
                     nullable = false)})
-    private Set<Role> roles;
+    private Set<Role> roles = new HashSet<Role>();
 
-    public User() {
+    public Users() {
     }
 
-    public User(String login, String password) {
+    public Users(String login, String password) {
         this.login = login;
         this.password = password;
     }
@@ -79,9 +75,6 @@ public class User implements Serializable {
     }
 
     public Set<Role> getRoles() {
-        if (roles == null) {
-            roles = new HashSet<>();
-        }
         return roles;
     }
 
@@ -89,11 +82,6 @@ public class User implements Serializable {
         this.roles = roles;
     }
 
-    public SubjectType getSubject() {
-        return subject;
-    }
 
-    public void setSubject(SubjectType subject) {
-        this.subject = subject;
-    }
+
 }
