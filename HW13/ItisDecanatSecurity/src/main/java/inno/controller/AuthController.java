@@ -31,7 +31,6 @@ public class AuthController {
         if (error == Boolean.TRUE) {
             map.addAttribute("error", true);
         }
-
         map.addAttribute("users", new Users());
         return "login";
     }

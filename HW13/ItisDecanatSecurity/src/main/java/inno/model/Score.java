@@ -1,6 +1,5 @@
 package inno.model;
 
-import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
@@ -30,6 +29,11 @@ public class Score implements Serializable {
     private Student student;
 
     public Score() {
+    }
+
+    public Score(Integer score, SubjectType subjectType) {
+        this.score = score;
+        this.subjectType = subjectType;
     }
 
     public Score(Integer score, SubjectType subjectType, Student student) {

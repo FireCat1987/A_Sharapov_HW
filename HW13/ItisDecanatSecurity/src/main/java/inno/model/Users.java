@@ -4,6 +4,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -26,12 +27,12 @@ public class Users implements Serializable {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Student> students;
 
-    @ManyToMany
+    @ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(name = "users_roles", joinColumns = {
             @JoinColumn(name = "user_id", nullable = false)},
             inverseJoinColumns = {@JoinColumn(name = "role_id",
                     nullable = false)})
-    private Set<Role> roles;
+    private Set<Role> roles = new HashSet<Role>();
 
     public Users() {
     }
@@ -80,6 +81,7 @@ public class Users implements Serializable {
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
+
 
 
 }

@@ -10,8 +10,7 @@
         <property name="targetUrlParameter" value="targetUrl" />
     </bean>
     <security:http auto-config="true" use-expressions="true">
-        <!--<security:csrf disabled="true"/>-->
-        <security:intercept-url pattern="/login.jsp*" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+        <security:csrf disabled="true"/>
         <security:form-login login-page="/login"
                              authentication-failure-url="/login?error=true"
                              default-target-url="/students"
@@ -19,7 +18,9 @@
                              password-parameter="password"
                              authentication-success-handler-ref="savedRequestAwareAuthenticationSuccessHandler"
         />
+        <security:intercept-url pattern="/students/*/delete" access="hasRole('ROLE_ADMIN')"/>
         <security:intercept-url pattern="/students/**" access="hasRole('ROLE_USER')"/>
+        <security:intercept-url pattern="/students/" access="hasRole('IS_AUTHENTICATED_ANONYMOUSLY')"/>
         <security:logout logout-url="/logout" logout-success-url="/students"/>
     </security:http>
     <security:authentication-manager>
