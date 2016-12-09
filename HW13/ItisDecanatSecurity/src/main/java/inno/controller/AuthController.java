@@ -1,7 +1,7 @@
 package inno.controller;
 
 
-import inno.model.Users;
+import inno.model.User;
 import inno.service.UsersService;
 import inno.utils.form.UserForm;
 import inno.utils.validators.UserValidator;
@@ -31,7 +31,7 @@ public class AuthController {
         if (error == Boolean.TRUE) {
             map.addAttribute("error", true);
         }
-        map.addAttribute("users", new Users());
+        map.addAttribute("users", new User());
         return "login";
     }
 
@@ -58,7 +58,7 @@ public class AuthController {
     }
 
 /*    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public String authorizeUser(@ModelAttribute @Valid Users user, BindingResult result, HttpServletRequest request){
+    public String authorizeUser(@ModelAttribute @Valid User user, BindingResult result, HttpServletRequest request){
         String ref = null;
         if(request.getHeader("referer").split("=").length > 1){
             ref = request.getHeader("referer").split("=")[1];
@@ -67,7 +67,7 @@ public class AuthController {
             return "login";
         }
         System.out.println(user.getLogin());
-        Users loginUser = usersRepository.findByLogin(user.getLogin());
+        User loginUser = usersRepository.findByLogin(user.getLogin());
         System.out.println(loginUser);
         if(loginUser != null && loginUser.getPassword().equals(user.getPassword())) {
             request.getSession(true).setAttribute("user", user);

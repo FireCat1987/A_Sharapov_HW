@@ -2,7 +2,6 @@ package inno.service.impl;
 
 
 import inno.model.Role;
-import inno.model.SubjectType;
 import inno.model.User;
 import inno.repository.RoleRepository;
 import inno.repository.UsersRepository;
@@ -21,7 +20,7 @@ public class UsersServiceImpl implements UsersService {
 
     private static final String DEFAULT_ROLE_NAME = "ROLE_USER";
     private Role defaultRole;
-    private SubjectType subject;
+  /*  private SubjectType subject;*/
     @Autowired
     RoleRepository roleRepository;
 
@@ -34,7 +33,7 @@ public class UsersServiceImpl implements UsersService {
     @PostConstruct
     private void initialize() {
         defaultRole = roleRepository.findByName(DEFAULT_ROLE_NAME);
-        subject = SubjectType.OTHER;
+        /*subject = SubjectType.OTHER;*/
     }
 
     @Transactional
@@ -42,7 +41,7 @@ public class UsersServiceImpl implements UsersService {
     public void saveUser(UserForm form) {
         User user = transformer.toUser(form);
         user.getRoles().add(defaultRole);
-        user.setSubject(subject);
+        /*user.setSubject(subject);*/
         usersRepository.save(user);
     }
 }

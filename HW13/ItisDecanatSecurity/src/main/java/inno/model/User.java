@@ -11,7 +11,7 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 @SequenceGenerator(sequenceName = "users_seq", name = "usersSequence")
-public class Users implements Serializable {
+public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "usersSequence")
     @Column(name = "id")
@@ -34,10 +34,10 @@ public class Users implements Serializable {
                     nullable = false)})
     private Set<Role> roles = new HashSet<Role>();
 
-    public Users() {
+    public User() {
     }
 
-    public Users(String login, String password) {
+    public User(String login, String password) {
         this.login = login;
         this.password = password;
     }

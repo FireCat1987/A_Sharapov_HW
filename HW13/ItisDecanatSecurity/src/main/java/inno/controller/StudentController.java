@@ -13,6 +13,7 @@ import inno.service.StudentService;
 import inno.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.web.firewall.RequestRejectedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -77,7 +78,7 @@ public class StudentController {
     @RequestMapping(value = "/students/{student_id}", method = RequestMethod.GET)
     public String showStudent(@PathVariable("student_id") Integer studentId, ModelMap map) {
         Student student = studentRepository.findOne(studentId);
-        student.setScores(studentRepository.findScoresByStudent(student));
+        student.setScores(scoreRepository.findScoresByStudent(student));
         map.addAttribute("sumScore",student.getScores().stream().mapToInt(Score::getScore).sum());
         map.addAttribute("avgScore",student.getScores().stream().mapToInt(Score::getScore).average().orElse(0.0));
         map.addAttribute("student", student);
@@ -141,8 +142,14 @@ public class StudentController {
         studentService.saveStudent(student);
         return "redirect:/students";
     }
+
     private boolean userCanEditStudent(Student student) {
         User currentUser = SecurityUtils.getCurrentUser();
         return currentUser != null && student.getUser().getId().equals(currentUser.getId());
+    }
+
+    @RequestMapping(value = "error", method = RequestMethod.GET)
+    public String saveStudent() {
+       throw new RequestRejectedException("Ручная ошибка");
     }
 }

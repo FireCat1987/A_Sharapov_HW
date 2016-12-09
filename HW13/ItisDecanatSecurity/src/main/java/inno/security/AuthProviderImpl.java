@@ -17,13 +17,16 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AuthProviderImpl implements AuthenticationProvider {
+
+public class AuthProviderImpl implements  AuthenticationProvider {
 
     @Autowired
     UsersRepository repository;
 
     @Autowired
     BCryptPasswordEncoder encoder;
+
+
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -32,6 +35,7 @@ public class AuthProviderImpl implements AuthenticationProvider {
         if (user == null) {
             throw new UsernameNotFoundException("User not found!");
         }
+
 
         String password = authentication.getCredentials().toString();
         if (!encoder.matches(password, user.getPassword())) {
@@ -50,4 +54,6 @@ public class AuthProviderImpl implements AuthenticationProvider {
     public boolean supports(Class<?> aClass) {
         return UsernamePasswordAuthenticationToken.class.equals(aClass);
     }
+
 }
+
