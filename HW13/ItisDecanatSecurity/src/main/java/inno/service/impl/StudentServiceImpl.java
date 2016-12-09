@@ -2,7 +2,7 @@ package inno.service.impl;
 
 import inno.model.Score;
 import inno.model.Student;
-import inno.model.Users;
+import inno.model.User;
 import inno.repository.ScoreRepository;
 import inno.repository.StudentRepository;
 import inno.security.SecurityUtils;
@@ -25,7 +25,7 @@ public class StudentServiceImpl implements StudentService {
     @Transactional
     @Override
     public void saveStudent(Student student) {
-        Users user = SecurityUtils.getCurrentUser();
+        User user = SecurityUtils.getCurrentUser();
         student.setUser(user);
         List<Score> scores = repository.findScoresByStudent(student);
         student.setScores(scores);

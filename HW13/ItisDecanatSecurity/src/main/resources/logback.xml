@@ -4,14 +4,12 @@
         <encoder>
             <pattern>%.-19date;%.-1level;%logger;%msg%n</pattern>
         </encoder>
-        <withJansi>true</withJansi>
     </appender>
     <appender name="STDERR" class="ch.qos.logback.core.ConsoleAppender">
         <target>System.err</target>
         <encoder>
             <pattern>%.-19date;[%thread];%-1level;%logger{36} - %msg%n</pattern>
         </encoder>
-        <withJansi>true</withJansi>
     </appender>
     <logger name="org.springframework"  level="debug" additivity="false" appender-ref="CONSOLE"/>
     <logger name="org.hibernate"  level="debug" additivity="false" appender-ref="CONSOLE"/>

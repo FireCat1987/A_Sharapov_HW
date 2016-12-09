@@ -42,7 +42,7 @@ public class UsersServiceImpl implements UsersService {
     public void saveUser(UserForm form) {
         User user = transformer.toUser(form);
         user.getRoles().add(defaultRole);
-        user.setSubject(subject);
+       /* user.setSubject(subject);*/
         usersRepository.save(user);
     }
 }
