@@ -44,9 +44,9 @@
             <td><form:errors path="lastname"/></td>
         </tr>
         <tr>
-            <td><form:label path="studgroup">Номер группы</form:label></td>
-            <td><form:input path="studgroup"/></td>
-            <td><form:errors path="studgroup"/></td>
+            <td><form:label path="studGroup">Номер группы</form:label></td>
+            <td><form:input path="studGroup"/></td>
+            <td><form:errors path="studGroup"/></td>
         </tr>
     </table>
     <input type="submit" value="save"/>

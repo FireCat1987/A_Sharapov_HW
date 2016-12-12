@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -23,18 +24,6 @@
             $('button.delete').click(function () {
              document.location.href = "/students/${student.id}/deletescore/" + this.getAttribute('data-id') + "/";
 
-/*               $.ajax({
-                    url: '/students/'+${student.id},
-                    type: 'DELETE',
-                    data: this.getAttribute('data-id'),
-                    success: function (response) {
-                        console.log("okey");
-                        console.log(response);
-                        document.location.reload();
-                    }
-                });*/
-
-
             });
         });
     </script>
@@ -52,7 +41,7 @@
     <div class="container">
 
 <h1>${student.firstname} ${student.surname} ${student.lastname}</h1>
-<p>Номер группы: ${student.studgroup}</p>
+<p>Номер группы: ${student.studGroup}</p>
         <div class="container">
             <div class="row">
                 <div class="col-sm-6 alert alert-success">
@@ -76,6 +65,9 @@
             </div>--%>
         </div>
 <h2>Оценки: </h2>
+        <sec:authentication property="principal.id" var="user_id"/>
+
+<sec:authorize access="${user_id eq student.user.id}">
 <form:form action="/students/${student.id}" method="post" modelAttribute="score">
     <table>
         <tr>
@@ -93,7 +85,7 @@
     </table>
     <input type="submit" value="Добавить оценку">
 </form:form>
-
+</sec:authorize>
 <hr>
 <ul class="list-group">
     <c:if test="${student.scores.isEmpty()}">
@@ -103,9 +95,11 @@
 
     <c:forEach items="${student.scores}" var="score">
         <li class="list-group-item">
+            <sec:authorize access="${user_id eq student.user.id}">
             <button type="button" class="close delete" aria-label="delete" data-id="${score.id}">
                 <span aria-hidden="true">&times;</span>
             </button>
+            </sec:authorize>
             <p>${score.subjectType.description} - ${score.score} баллов;</p>
         </li>
     </c:forEach>

@@ -53,7 +53,7 @@ public class StudentController {
     public String getAllStudents(@RequestParam(value = "group", required = false) String group, ModelMap map) {
         List<Student> students = studentRepository.findAll();
         if (group != null) {
-            students = students.stream().filter(p -> p.getStudgroup().contains(group)).collect(Collectors.toList());
+            students = students.stream().filter(p -> p.getStudGroup().contains(group)).collect(Collectors.toList());
         }
         map.addAttribute("students", students);
         return "students/index";

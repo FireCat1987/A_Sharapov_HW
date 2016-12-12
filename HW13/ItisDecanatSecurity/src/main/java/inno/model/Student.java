@@ -27,20 +27,23 @@ public class Student implements Serializable {
     private String lastname;
     @Column(name = "studgroup")
     @NotEmpty
-    private String studgroup;
+    private String studGroup;
+
+
     @OneToMany(targetEntity = Score.class, mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Score> scores;
+
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "curator_id")
     private User user;
     public Student() {
     }
 
-    public Student(String firstname, String surname, String lastname, String studgroup) {
+    public Student(String firstname, String surname, String lastname, String studGroup) {
         this.firstname = firstname;
         this.surname = surname;
         this.lastname = lastname;
-        this.studgroup = studgroup;
+        this.studGroup = studGroup;
     }
 
     public Integer getId() {
@@ -75,12 +78,12 @@ public class Student implements Serializable {
         this.lastname = lastname;
     }
 
-    public String getStudgroup() {
-        return studgroup;
+    public String getStudGroup() {
+        return studGroup;
     }
 
-    public void setStudgroup(String studgroup) {
-        this.studgroup = studgroup;
+    public void setStudGroup(String studGroup) {
+        this.studGroup = studGroup;
     }
 
     public List<Score> getScores() {
