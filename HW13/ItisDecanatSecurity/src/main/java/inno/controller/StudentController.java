@@ -49,7 +49,7 @@ public class StudentController {
 
 
 
-    @RequestMapping("/students")
+    @RequestMapping(value = "/students", method = RequestMethod.GET)
     public String getAllStudents(@RequestParam(value = "group", required = false) String group, ModelMap map) {
         List<Student> students = studentRepository.findAll();
         if (group != null) {
