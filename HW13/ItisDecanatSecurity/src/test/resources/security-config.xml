@@ -20,7 +20,7 @@
         />
         <security:intercept-url pattern="/students/*/delete" access="hasRole('ROLE_ADMIN')"/>
         <security:intercept-url pattern="/students/**" access="hasRole('ROLE_USER')"/>
-        <security:intercept-url pattern="/students/" access="hasRole('IS_AUTHENTICATED_ANONYMOUSLY')"/>
+       <!-- <security:intercept-url pattern="/students/" access="permitAll()"/>-->
         <security:logout logout-url="/logout" logout-success-url="/students"/>
     </security:http>
     <security:authentication-manager>

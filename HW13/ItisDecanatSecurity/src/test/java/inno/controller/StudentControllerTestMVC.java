@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration(locations = {"classpath:/dispatcher-servlet.xml"})
+@ContextConfiguration(locations = {"classpath:dispatcher-servlet.xml"})
 public class StudentControllerTestMVC {
     @Autowired
     private WebApplicationContext wac;
@@ -36,12 +36,12 @@ public class StudentControllerTestMVC {
     @Autowired
     private StudentService studentService;
     @Autowired
-    FilterChainProxy springSecurityFilterChain;
+    private FilterChainProxy springSecurityFilterChain;
 
     @Before
     public void setUp() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac)
-                .addFilter(springSecurityFilterChain)
+                //.addFilter(springSecurityFilterChain)
                 .dispatchOptions(true)
                 .build();
     }

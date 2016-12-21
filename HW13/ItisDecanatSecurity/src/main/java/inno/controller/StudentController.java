@@ -43,10 +43,9 @@ public class StudentController {
     UsersService usersService;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String indexPage(ModelMap map){
+    public String indexPage(ModelMap map) {
         return "index";
     }
-
 
 
     @RequestMapping(value = "/students", method = RequestMethod.GET)
@@ -79,8 +78,8 @@ public class StudentController {
     public String showStudent(@PathVariable("student_id") Integer studentId, ModelMap map) {
         Student student = studentRepository.findOne(studentId);
         student.setScores(scoreRepository.findScoresByStudent(student));
-        map.addAttribute("sumScore",student.getScores().stream().mapToInt(Score::getScore).sum());
-        map.addAttribute("avgScore",student.getScores().stream().mapToInt(Score::getScore).average().orElse(0.0));
+        map.addAttribute("sumScore", student.getScores().stream().mapToInt(Score::getScore).sum());
+        map.addAttribute("avgScore", student.getScores().stream().mapToInt(Score::getScore).average().orElse(0.0));
         map.addAttribute("student", student);
         map.addAttribute("score", new Score());
         map.addAttribute("subjects", SubjectType.values());
@@ -90,7 +89,7 @@ public class StudentController {
     @RequestMapping(value = "/students/{student_id}/deletescore/{score_id}", method = RequestMethod.GET)
     public String deleteScore(@PathVariable("student_id") Integer studentId, @PathVariable("score_id") Integer scoreId, ModelMap map) {
         scoreRepository.delete(scoreId);
-        return "redirect:/students/"+studentId;
+        return "redirect:/students/" + studentId;
     }
 
 /*    @RequestMapping(value = "/students/{student_id}", method = RequestMethod.DELETE)
@@ -106,12 +105,12 @@ public class StudentController {
     @RequestMapping(value = "/students/{student_id}", method = RequestMethod.POST)
     public String addScoreToStudent(@PathVariable("student_id") Integer studentId, ModelMap map, @ModelAttribute("score") @Valid Score score, BindingResult result) {
         if (result.hasErrors()) {
-             return "/students/show";
+            return "/students/show";
         }
         Student student = studentRepository.findOne(studentId);
         score.setStudent(student);
         scoreRepository.save(score);
-        return "redirect:/students/"+studentId;
+        return "redirect:/students/" + studentId;
     }
 
     @RequestMapping(value = "/students/{id}/delete", method = RequestMethod.GET)
@@ -150,6 +149,6 @@ public class StudentController {
 
     @RequestMapping(value = "error", method = RequestMethod.GET)
     public String saveStudent() {
-       throw new RequestRejectedException("Ручная ошибка");
+        throw new RequestRejectedException("Ручная ошибка");
     }
 }
