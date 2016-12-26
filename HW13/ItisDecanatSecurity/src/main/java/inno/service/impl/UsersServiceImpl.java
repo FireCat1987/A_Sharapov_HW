@@ -38,6 +38,7 @@ public class UsersServiceImpl implements UsersService {
     @Override
     public void saveUser(UserForm form) {
         User user = transformer.toUser(form);
+        System.out.println(defaultRole);
         user.getRoles().add(defaultRole);
         usersRepository.save(user);
     }
