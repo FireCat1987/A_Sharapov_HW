@@ -9,6 +9,7 @@
           class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
         <property name="targetUrlParameter" value="targetUrl" />
     </bean>
+
     <security:http auto-config="true" use-expressions="true">
         <security:csrf disabled="true"/>
         <security:form-login login-page="/login"

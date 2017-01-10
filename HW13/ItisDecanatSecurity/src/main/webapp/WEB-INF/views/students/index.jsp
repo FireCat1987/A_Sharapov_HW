@@ -22,6 +22,35 @@
             background-color: #eceeef;
         }
     </style>
+    <script type="text/javascript">
+        function editandsave(divid)
+        {
+            console.log(divid);
+            var div = document.getElementById(divid);
+            var a = document.getElementById("esbut");
+
+
+            if (div.contentEditable == "true")
+            {
+                div.contentEditable = "false";
+                console.log(div.innerHTML);
+                a.innerHTML = "Редактировать";
+                /*$.ajax(url, {
+                    method: 'GET',
+                    success: function () {
+                        $post.hide();
+                    }
+                });*/
+            }
+
+            else
+            {
+                div.contentEditable = "true";
+                a.innerHTML = "Сохранить";
+            }
+
+        }
+    </script>
 </head>
 <body>
 <nav class="navbar navbar-light">
@@ -49,16 +78,21 @@
 </c:if>
 
 <c:forEach var="student" items="${students}">
-    <h3>${student.firstname} ${student.surname} ${student.lastname}</h3>
+    <h3><div contenteditable="false" id="${student.id}">${student.firstname} ${student.surname} ${student.lastname}</div></h3>
     <p>Группа:${student.studGroup}</p><p>Преподаватель: ${student.user.login}</p>
-    <a href="/students/${student.id}">Смотреть оценки студента...</a><br>
+    <div class="btn-group" data-toggle="buttons">
+    <a class="btn btn-primary btn-sm" href="/students/${student.id}">Смотреть оценки студента...</a>
     <sec:authentication property="principal.id" var="user_id"/>
-    <sec:authorize access="hasRole('ROLE_ADMIN')">
-    <a href="/students/${student.id}/delete">Удалить студента</a>
-    </sec:authorize>
+
     <sec:authorize access="${user_id eq student.user.id}">
-    <a href="/students/${student.id}/edit">Редактировать студента</a>
+       <%-- <a class="btn btn-warning btn-sm" href="/students/${student.id}/edit">Редактировать студента</a>--%>
+        <a type="button" class="btn btn-warning btn-sm" id="esbut" onclick="editandsave(${student.id});" <%--href="/students/${student.id}/edit"--%>>Редактировать студента</a>
+        <a class="btn btn-danger btn-sm" href="/students/${student.id}/delete">Удалить студента</a>
     </sec:authorize>
+    <sec:authorize access="hasRole('ROLE_ADMIN')">
+        <a class="btn btn-danger btn-sm" href="/students/${student.id}/delete">Удалить студента</a>
+    </sec:authorize>
+    </div>
     <hr>
 </c:forEach>
 </div>

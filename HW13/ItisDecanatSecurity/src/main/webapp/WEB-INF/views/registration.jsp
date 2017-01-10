@@ -29,8 +29,10 @@
 </head>
 <body>
 <nav class="navbar navbar-light">
+
     <a href="/students" class="btn btn-outline-danger float-lg-right">Список студентов</a>
     <a href="/login" class="btn btn-outline-danger float-lg-right">Вход</a>
+
 </nav>
 <div class="container">
     <form:form action="/registration" method="post" modelAttribute="userForm" cssClass="form-signin">

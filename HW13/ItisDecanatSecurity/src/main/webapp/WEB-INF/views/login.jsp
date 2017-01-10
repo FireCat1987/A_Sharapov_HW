@@ -31,8 +31,10 @@
 </head>
 <body>
 <nav class="navbar navbar-light">
-    <a href="/students" class="btn btn-outline-danger float-lg-right">Список студентов</a>
-    <a href="/registration" class="btn btn-outline-danger float-lg-right">Регистрация</a>
+
+        <a href="/students" class="btn btn-outline-danger float-lg-right">Список студентов</a>
+        <a href="/registration" class="btn btn-outline-danger float-lg-right">Регистрация</a>
+
 </nav>
 <div class="container">
     <c:if test="${error != null}">
