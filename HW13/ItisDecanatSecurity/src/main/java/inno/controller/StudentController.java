@@ -119,7 +119,7 @@ public class StudentController {
         if (!userCanEditStudent(student)) {
             throw new AccessDeniedException("Acces denied");
         }
-        studentRepository.delete(student);
+        studentService.deleteStudent(student);
         return "redirect:/students";
     }
 
@@ -147,8 +147,4 @@ public class StudentController {
         return currentUser != null && student.getUser().getId().equals(currentUser.getId());
     }
 
-    @RequestMapping(value = "error", method = RequestMethod.GET)
-    public String saveStudent() {
-        throw new RequestRejectedException("Ручная ошибка");
-    }
 }

@@ -16,7 +16,7 @@
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.3.6/css/bootstrap-colorpicker.css"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.3.6/js/bootstrap-colorpicker.min.js"></script>
-    <script src="<c:url value="/resources/js/main.js"/>"></script>
+    <%--<script src="<c:url value="/resources/js/main.js"/>"></script>--%>
 
     <style>
         body {
@@ -28,7 +28,52 @@
 <nav class="navbar navbar-light">
 
 </nav>
-<div class="container">
+
+<h1> HELLO WORLD </h1>
+<input type="text" id="data"/>
+<a id="post" href="#">POST</a>
+<a id="get" href="#">GET</a>
+
+<div id="container"></div>
+<script>
+    $('#get').click(function () {
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '/getRandomData',
+            data: "",
+            success: function (response) {
+                var html = "";
+                $.each(response.data, function (i) {
+                    html = html + response.data[i] + "<br/>";
+                });
+                $('#container').html(html);
+            }
+        });
+    });
+
+    $('#post').click(function () {
+        if (!$("#data").val()) {
+            alert("Enter your data!");
+        } else {
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: '/persist',
+                data: {
+                    'data': $("#data").val()
+                },
+                success: function (response) {
+                    $('#get').click();
+                }
+            });
+        }
+
+    });
+
+</script>
+
+<%--<div class="container">
     <div class="jumbotron jumbotron-fluid">
         <div class="container">
             <h1 class="display-3">Управление студентами итис!</h1>
@@ -39,6 +84,6 @@
         </div>
     </div>
 
-</div>
+</div>--%>
 </body>
 </html>

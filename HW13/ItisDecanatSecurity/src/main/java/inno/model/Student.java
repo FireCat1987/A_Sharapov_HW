@@ -30,7 +30,7 @@ public class Student implements Serializable {
     private String studGroup;
 
 
-    @OneToMany(targetEntity = Score.class, mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(targetEntity = Score.class, mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Score> scores;
 
     @ManyToOne

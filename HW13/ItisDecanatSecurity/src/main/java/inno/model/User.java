@@ -24,7 +24,7 @@ public class User implements Serializable {
     @NotEmpty(message = "Пароль не может быть пустым")
     private String password;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Student> students;
 
     @ManyToMany(fetch=FetchType.EAGER)
